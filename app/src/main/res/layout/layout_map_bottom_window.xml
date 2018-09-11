@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/tv_object_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="山西大正有限公司"
+        android:textColor="@color/text_black"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tv_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_object_name"
+        android:text="距离320米"
+        android:textColor="@color/red" />
+
+    <TextView
+        android:id="@+id/tv_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_distance"
+        android:text="信用A级 | 检查合格率:100% | 检查次数:3" />
+
+    <TextView
+        android:id="@+id/tv_tel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_details"
+        android:text="022-2655858" />
+
+    <TextView
+        android:id="@+id/tv_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_tel"
+        android:text="山西省太原市晋源区右玉县威远镇刘家窑南路12号" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_above="@+id/btn_check"
+        android:layout_marginTop="10dp"
+        android:background="@color/line_divider"></View>
+
+    <Button
+        android:id="@+id/btn_check"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@null"
+        android:text="开启新的检查"
+        android:textColor="@color/greenlight" />
+</RelativeLayout>
