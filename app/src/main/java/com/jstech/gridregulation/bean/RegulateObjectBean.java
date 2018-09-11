@@ -3,10 +3,12 @@ package com.jstech.gridregulation.bean;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 
+import java.io.Serializable;
+
 /**
  * 监管对象的实体类
  */
-public class RegulateObject {
+public class RegulateObjectBean implements Serializable {
     private String name;
     private String details;
     private String tel;

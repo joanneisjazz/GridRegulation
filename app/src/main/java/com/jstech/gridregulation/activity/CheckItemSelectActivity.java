@@ -1,22 +1,28 @@
 package com.jstech.gridregulation.activity;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ToggleButton;
+import android.widget.Toast;
 
 import com.jstech.gridregulation.R;
-import com.jstech.gridregulation.adapter.CheckTableSelectAdapter;
+import com.jstech.gridregulation.adapter.CheckItemSelectAdapter;
 import com.jstech.gridregulation.base.BaseActivity;
-import com.jstech.gridregulation.bean.CheckTableBean;
+import com.jstech.gridregulation.bean.CheckItemBean;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 
-public class CheckTableSelectActivity extends BaseActivity implements CheckTableSelectAdapter.SelectInterface, View.OnClickListener {
+/**
+ * 选择检查项目
+ */
+public class CheckItemSelectActivity extends BaseActivity implements
+        CheckItemSelectAdapter.SelectInterface, View.OnClickListener {
 
     @BindView(R.id.recyclerview_table)
     RecyclerView rvTable;
@@ -25,19 +31,24 @@ public class CheckTableSelectActivity extends BaseActivity implements CheckTable
     @BindView(R.id.btn_save)
     Button btnSave;
 
-    ArrayList<CheckTableBean> mCheckTableBeanList = new ArrayList<>();
-    CheckTableSelectAdapter mAdapter;
+    ArrayList<CheckItemBean> mCheckItemBeanList = new ArrayList<>();
+    ArrayList<CheckItemBean> mSelectedList = new ArrayList<>();
+
+    CheckItemSelectAdapter mAdapter;
 
 
     @Override
     protected int getLayoutId() {
+        /**
+         * 跟选择检查表用同一个页面
+         */
         return R.layout.activity_check_table_select;
     }
 
     @Override
     public void initView() {
         initList();
-        mAdapter = new CheckTableSelectAdapter(mCheckTableBeanList, this, R.layout.item_check_table_select, this);
+        mAdapter = new CheckItemSelectAdapter(mCheckItemBeanList, this, R.layout.item_check_table_select, this);
         rvTable.setLayoutManager(new LinearLayoutManager(this));
         rvTable.setAdapter(mAdapter);
         ckbAllSelect.setOnClickListener(this);
@@ -52,7 +63,18 @@ public class CheckTableSelectActivity extends BaseActivity implements CheckTable
      */
     @Override
     public void select(int position, boolean isSelected) {
-        mCheckTableBeanList.get(position).setSelected(isSelected);
+        if (mCheckItemBeanList.get(position).isSelected()) {
+            mCheckItemBeanList.get(position).setSelected(false);
+        } else {
+            mCheckItemBeanList.get(position).setSelected(true);
+        }
+        int isExist = mSelectedList.indexOf(mCheckItemBeanList.get(position));
+        //如果该检查项已经在选中列表里，需要在选中列表中删除该检查表
+        if (isExist == -1) {
+            mSelectedList.add(mCheckItemBeanList.get(position));
+        } else {
+            mSelectedList.remove(mCheckItemBeanList.get(position));
+        }
         if (isAllSelected()) {
             ckbAllSelect.setChecked(true);
         } else {
@@ -68,7 +90,7 @@ public class CheckTableSelectActivity extends BaseActivity implements CheckTable
      * @return
      */
     private boolean isAllSelected() {
-        for (CheckTableBean b : mCheckTableBeanList) {
+        for (CheckItemBean b : mCheckItemBeanList) {
             if (!b.isSelected()) {
                 return false;
             }
@@ -81,6 +103,15 @@ public class CheckTableSelectActivity extends BaseActivity implements CheckTable
         switch (v.getId()) {
             //保存
             case R.id.btn_save:
+                if (mSelectedList.size() == 0) {
+                    Toast.makeText(this, "请选择检查项目", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Intent intent = new Intent(this, SiteCheckActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("list", mSelectedList);
+                intent.putExtras(bundle);
+                startActivity(intent);
                 break;
             //全部选中
             case R.id.ckb_all_select:
@@ -94,25 +125,29 @@ public class CheckTableSelectActivity extends BaseActivity implements CheckTable
     private void selectAll() {
         if (isAllSelected()) {
             //如果已经宣布选中，再点击时应该全部取消
-            for (CheckTableBean b : mCheckTableBeanList) {
+            for (CheckItemBean b : mCheckItemBeanList) {
                 b.setSelected(false);
             }
+            mSelectedList.clear();
             ckbAllSelect.setChecked(false);
         } else {
-            for (CheckTableBean b : mCheckTableBeanList) {
+            for (CheckItemBean b : mCheckItemBeanList) {
                 b.setSelected(true);
             }
+            mSelectedList.clear();
+            mSelectedList.addAll(mCheckItemBeanList);
             ckbAllSelect.setChecked(true);
         }
         mAdapter.notifyDataSetChanged();
     }
 
     private void initList() {
-        for (int i = 0; i < 6; i++) {
-            CheckTableBean b = new CheckTableBean();
+        for (int i = 0; i < 9; i++) {
+            CheckItemBean b = new CheckItemBean();
             b.setSelected(false);
             b.setId(i + "");
-            b.setTableName("检查表" + i);
+            b.setContent("检查项目" + i);
+            mCheckItemBeanList.add(b);
         }
     }
 }

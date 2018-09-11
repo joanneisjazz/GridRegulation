@@ -37,6 +37,17 @@
             android:name=".activity.SiteInspectionObjectMapActivity"
             android:label="现场检查地图页面"></activity>
 
+        <activity
+            android:name=".activity.CheckTableSelectActivity"
+            android:label="选择检查表"></activity>
+
+        <activity
+            android:name=".activity.CheckItemSelectActivity"
+            android:label="选择检查项目"></activity>
+        <activity
+            android:name=".activity.SiteCheckActivity"
+            android:label="选择检查结果"></activity>
+
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"

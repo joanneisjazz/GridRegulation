@@ -3,18 +3,65 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <CheckBox
-        android:id="@+id/ckb_select"
+    <TextView
+        android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true" />
+        android:text="表1" />
 
     <TextView
         android:id="@+id/tv_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_title"
         android:layout_centerVertical="true"
         android:layout_marginLeft="15dp"
         android:layout_toRightOf="@+id/ckb_select"
-        android:text="检查表1" />
+        android:text="检查项1" />
+
+    <RadioGroup
+        android:id="@+id/rg_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rbtn_qualified"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/qualified" />
+
+        <RadioButton
+            android:id="@+id/rbtn_basic_qualified"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/basic_qualified" />
+
+        <RadioButton
+            android:id="@+id/rbtn_unqualified"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/unqualified" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/tv_unqualified_reason"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rg_result"
+        android:layout_marginTop="10dp"
+        android:text="不合格"
+        android:textColor="@color/red"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/tv_method"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tv_unqualified_reason"
+        android:layout_alignParentRight="true"
+        android:autoLink="all"
+        android:text="@string/check_method" />
 </RelativeLayout>

@@ -18,7 +18,7 @@ import com.jstech.gridregulation.utils.SystemUtil;
 /**
  * 在地图上显示的底部弹框
  */
-public class MapBottomWindow {
+public class ReminderWindow {
 
     PopupWindow mPopupWindow;
     TextView tvObjectName,tvAddress, tvDistance, tvDetails, tvTel;
@@ -27,11 +27,11 @@ public class MapBottomWindow {
     View contentview;
     RegulateObjectBean obj;
 
-    public MapBottomWindow(Context mContext) {
+    public ReminderWindow(Context mContext) {
         this.mContext = mContext;
     }
 
-    public MapBottomWindow(final Builder builder) {
+    public ReminderWindow(final Builder builder) {
         mContext = builder.context;
         contentview = LayoutInflater.from(mContext).inflate(R.layout.layout_map_bottom_window, null);
         mPopupWindow =
@@ -140,8 +140,8 @@ public class MapBottomWindow {
             return this;
         }
 
-        public MapBottomWindow builder() {
-            return new MapBottomWindow(this);
+        public ReminderWindow builder() {
+            return new ReminderWindow(this);
         }
     }
 
@@ -210,7 +210,7 @@ public class MapBottomWindow {
      * @param y
      * @return
      */
-    public MapBottomWindow showAtLocation(int rootviewid, int gravity, int x, int y) {
+    public ReminderWindow showAtLocation(int rootviewid, int gravity, int x, int y) {
         if (mPopupWindow != null && !mPopupWindow.isShowing()) {
             SystemUtil.setBackgroundAlpha(0.5f, (Activity) mContext);
             View rootview = LayoutInflater.from(mContext).inflate(rootviewid, null);
@@ -229,7 +229,7 @@ public class MapBottomWindow {
      * @return
      */
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public MapBottomWindow showAsLaction(int targetviewId, int gravity, int offx, int offy) {
+    public ReminderWindow showAsLaction(int targetviewId, int gravity, int offx, int offy) {
         if (mPopupWindow != null) {
             SystemUtil.setBackgroundAlpha(0.5f, (Activity) mContext);
             View targetview = LayoutInflater.from(mContext).inflate(targetviewId, null);
@@ -248,7 +248,7 @@ public class MapBottomWindow {
      * @return
      */
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public MapBottomWindow showAsLaction(View targetview, int gravity, int offx, int offy) {
+    public ReminderWindow showAsLaction(View targetview, int gravity, int offx, int offy) {
         if (mPopupWindow != null) {
             SystemUtil.setBackgroundAlpha(0.5f, (Activity) mContext);
             mPopupWindow.showAsDropDown(targetview, gravity, offx, offy);

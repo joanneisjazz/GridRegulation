@@ -7,27 +7,29 @@ import android.widget.TextView;
 
 import com.jstech.gridregulation.R;
 import com.jstech.gridregulation.base.BaseRecyclerAdapter;
+import com.jstech.gridregulation.bean.CheckItemBean;
 import com.jstech.gridregulation.bean.CheckTableBean;
 
 import java.util.List;
 
-public class CheckTableSelectAdapter extends BaseRecyclerAdapter<CheckTableBean> {
+public class CheckItemSelectAdapter extends BaseRecyclerAdapter<CheckItemBean> {
 
     SelectInterface selectListener;
 
-    public CheckTableSelectAdapter(List<CheckTableBean> mDatas, Context mContext, int layoutId) {
+    public CheckItemSelectAdapter(List<CheckItemBean> mDatas, Context mContext, int layoutId) {
         super(mDatas, mContext, layoutId);
     }
 
-    public CheckTableSelectAdapter(List<CheckTableBean> mDatas, Context mContext, int layoutId, SelectInterface selectListener) {
+    public CheckItemSelectAdapter(List<CheckItemBean> mDatas, Context mContext, int layoutId, SelectInterface selectListener) {
         super(mDatas, mContext, layoutId);
         this.selectListener = selectListener;
     }
 
     @Override
-    protected void bindItemData(ViewHolder viewHolder, final CheckTableBean data, final int position) {
+    protected void bindItemData(ViewHolder viewHolder, final CheckItemBean data, final int position) {
         TextView tvContent = viewHolder.getView(R.id.tv_content);
         final CheckBox ckbSelect = viewHolder.getView(R.id.ckb_select);
+        tvContent.setText(data.getContent());
         ckbSelect.setChecked(data.isSelected());
         ckbSelect.setOnClickListener(new View.OnClickListener() {
             @Override
