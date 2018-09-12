@@ -16,7 +16,7 @@ import com.jstech.gridregulation.bean.RegulateObjectBean;
 import com.jstech.gridregulation.utils.SystemUtil;
 
 /**
- * 在地图上显示的底部弹框
+ * 选择不合格的弹出框
  */
 public class ReminderWindow {
 

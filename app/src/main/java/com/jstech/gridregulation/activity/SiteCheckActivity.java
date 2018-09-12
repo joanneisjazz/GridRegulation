@@ -1,15 +1,21 @@
 package com.jstech.gridregulation.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.jstech.gridregulation.R;
 import com.jstech.gridregulation.adapter.CheckResultAdapter;
 import com.jstech.gridregulation.base.BaseActivity;
+import com.jstech.gridregulation.base.BaseRecyclerAdapter;
 import com.jstech.gridregulation.bean.CheckItemBean;
+import com.jstech.gridregulation.utils.SystemUtil;
+import com.jstech.gridregulation.widget.MyPopupWindow;
 
 import java.util.ArrayList;
 
@@ -35,6 +41,8 @@ public class SiteCheckActivity extends BaseActivity implements CheckResultAdapte
 
     @Override
     public void initView() {
+        initPopupWindow();
+
         tvNext.setText(R.string.next);
         tvNext.setVisibility(View.GONE);
 
@@ -47,12 +55,9 @@ public class SiteCheckActivity extends BaseActivity implements CheckResultAdapte
         }
         mResultAdapter = new CheckResultAdapter(mItemList, this, R.layout.item_site_check, this);
         recyclerView.setAdapter(mResultAdapter);
-    }
-
-    @Override
-    public void show(String id) {
 
     }
+
 
     /**
      * 检查是否所有的项目都已经有结果
@@ -66,4 +71,56 @@ public class SiteCheckActivity extends BaseActivity implements CheckResultAdapte
         return true;
     }
 
+    /**
+     * 查看检查方法
+     *
+     * @param id
+     */
+    @Override
+    public void showMethod(String id) {
+        Intent intent = new Intent(this, CheckMethodActivity.class);
+        intent.putExtra("id", id);
+        startActivity(intent);
+    }
+
+    /**
+     * 检查结果为不合格
+     *
+     * @param data
+     * @param viewHolder
+     */
+    @Override
+    public void showUnqualifiedReason(CheckItemBean data, final BaseRecyclerAdapter.ViewHolder viewHolder) {
+        data.setResult("3");
+        reasonWindow.showAtLocation(getLayoutId(), Gravity.CENTER, 0, 0);
+        reasonWindow.getPassButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TextView textView = viewHolder.getView(R.id.tv_unqualified_reason);
+                if (null != edtReason.getText()) {
+                    textView.setText(R.string.unqualified_reason + edtReason.getText().toString());
+                } else {
+                    textView.setText(R.string.unqualified_reason);
+                }
+                reasonWindow.dismiss();
+            }
+        });
+    }
+
+    MyPopupWindow reasonWindow;
+    EditText edtReason;
+
+    private void initPopupWindow() {
+        reasonWindow = new MyPopupWindow.Builder().setContext(this).
+                setContentView(R.layout.layout_unqualified_reason_input).setTitle("请输入原因")
+                .setwidth(SystemUtil.getWith(this) * 2 / 3)
+                .setheight(SystemUtil.getHeight(this) / 2)
+                .setFouse(true)
+                .setAnimationStyle(R.style.Animation_CustomPopup)
+                .setPass(getString(R.string.confrim))
+                .setUnpass(getString(R.string.cancel))
+                .setIsUnpassVisiable(false)
+                .builder();
+        edtReason = reasonWindow.getContentFrameLayout().findViewById(R.id.edit);
+    }
 }

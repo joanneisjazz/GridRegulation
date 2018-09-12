@@ -26,41 +26,74 @@ public class CheckResultAdapter extends BaseRecyclerAdapter<CheckItemBean> {
     }
 
     @Override
-    protected void bindItemData(ViewHolder viewHolder, final CheckItemBean data, final int position) {
+    protected void bindItemData(final ViewHolder viewHolder, final CheckItemBean data, final int position) {
         TextView tvContent = viewHolder.getView(R.id.tv_content);
         TextView tvCheckMethod = viewHolder.getView(R.id.tv_method);
-        RadioGroup rgResult = viewHolder.getView(R.id.rg_result);
         TextView tvTitle = viewHolder.getView(R.id.tv_title);
+        final TextView tvQualified = viewHolder.getView(R.id.tv_qualified);
+        final TextView tvBasicQualified = viewHolder.getView(R.id.tv_basic_qualified);
+        final TextView tvUnqualified = viewHolder.getView(R.id.tv_unqualified);
+        final TextView tvUnqualifiedReason = viewHolder.getView(R.id.tv_unqualified_reason);
 
         tvContent.setText(data.getContent());
-        rgResult.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case R.id.rbtn_qualified:
-                        data.setResult(ConstantValue.RESULT_QUALIFIED);
-                        break;
-                    case R.id.rbtn_basic_qualified:
-                        data.setResult(ConstantValue.RESULT_BASIC_QUALIFIED);
-                        break;
-                    case R.id.rbtn_unqualified:
-                        data.setResult(ConstantValue.RESULT_UNQUALIFIED);
-                        break;
-                }
-            }
-        });
+
+        //检查方法
         tvCheckMethod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != listener) {
-                    listener.show(data.getId());
+                    listener.showMethod(data.getId());
                 }
+            }
+        });
+
+        //检查结果--合格
+        tvQualified.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                data.setResult("2");
+                setSelectStyle(tvQualified, tvBasicQualified, tvUnqualified);
+                tvUnqualifiedReason.setVisibility(View.GONE);
+            }
+        });
+
+        //检查结果--基本合格
+        tvBasicQualified.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                data.setResult("1");
+                setSelectStyle(tvBasicQualified, tvQualified, tvUnqualified);
+                tvUnqualifiedReason.setVisibility(View.GONE);
+            }
+        });
+
+        //检查结果--不合格
+        tvUnqualified.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                data.setResult("3");
+                setSelectStyle(tvUnqualified, tvQualified, tvBasicQualified);
+//                tvUnqualifiedReason.setVisibility(View.VISIBLE);
+                listener.showUnqualifiedReason(data, viewHolder);
             }
         });
     }
 
     public interface MethodInterface {
-        void show(String id);
+        void showMethod(String id);
+
+        void showUnqualifiedReason(CheckItemBean data, ViewHolder viewHolder);
     }
 
+    /**
+     * 设置选中和未选中的样式
+     */
+    private void setSelectStyle(TextView tvSeleted, TextView tvUnSeleted1, TextView tvSeleted2) {
+        tvSeleted.setTextColor(mContext.getResources().getColor(R.color.white));
+        tvSeleted.setBackgroundColor(mContext.getResources().getColor(R.color.colorPrimaryDark));
+        tvUnSeleted1.setTextColor(mContext.getResources().getColor(R.color.appTextGray));
+        tvUnSeleted1.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+        tvSeleted2.setTextColor(mContext.getResources().getColor(R.color.appTextGray));
+        tvSeleted2.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+    }
 }

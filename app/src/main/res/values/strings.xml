@@ -2,6 +2,7 @@
     <string name="app_name">GridRegulation</string>
     <string name="all_select">全选</string>
     <string name="confrim">确定</string>
+    <string name="cancel">取消</string>
     <string name="save">保存</string>
     <string name="qualified">合格</string>
     <string name="basic_qualified">基本合格</string>
@@ -9,4 +10,5 @@
     <string name="check_method">检查方法</string>
     <string name="next">下一步</string>
 
+    <string name="unqualified_reason">不合格的原因:</string>
 </resources>

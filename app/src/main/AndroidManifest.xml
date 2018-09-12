@@ -47,6 +47,9 @@
         <activity
             android:name=".activity.SiteCheckActivity"
             android:label="选择检查结果"></activity>
+        <activity
+            android:name=".activity.CheckMethodActivity"
+            android:label="查看检查方法"></activity>
 
         <service
             android:name="com.baidu.location.f"

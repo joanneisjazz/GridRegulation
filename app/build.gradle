@@ -44,4 +44,5 @@ dependencies {
     implementation 'com.trello.rxlifecycle2:rxlifecycle-components:2.0.1'
     implementation 'com.android.support:support-v4:27.1.1'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.android.support:cardview-v7:22.2.1'
 }
