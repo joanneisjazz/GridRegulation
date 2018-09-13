@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -84,33 +85,54 @@ public class SiteCheckActivity extends BaseActivity implements CheckResultAdapte
     }
 
     /**
-     * 检查结果为不合格
+     * 选择检查结果
      *
      * @param data
      * @param viewHolder
      */
     @Override
-    public void showUnqualifiedReason(final CheckItemBean data, final BaseRecyclerAdapter.ViewHolder viewHolder) {
-        data.setResult("3");
-        final TextView tvReason = viewHolder.getView(R.id.tv_unqualified_reason);
-        reasonWindow.showAtLocation(getLayoutId(), Gravity.CENTER, 0, 0);
-        reasonWindow.getPassButton().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvReason.setVisibility(View.VISIBLE);
-                String reason = data.getReason();
-                if (null != reason && !"".equals(reason)) {
-                    edtReason.setText(reason);
-                }
-                reasonWindow.setPassButtonOnclickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        data.setReason(edtReason.getText().toString());
-
-                    }
-                });
+    public void selectResult(int result, final CheckItemBean data, final BaseRecyclerAdapter.ViewHolder viewHolder) {
+        data.setResult(result + "");
+        if (result == 2) {
+            //选择不合格
+            final TextView tvReason = viewHolder.getView(R.id.tv_unqualified_reason);
+            reasonWindow.showAtLocation(getLayoutId(), Gravity.CENTER, 0, 0);
+            final String reason = data.getReason();
+            if (null != reason && !"".equals(reason)) {
+                edtReason.setText(reason);
+            } else {
+                edtReason.setText("");
             }
-        });
+            reasonWindow.setPassButtonOnclickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String s = edtReason.getText().toString();
+                    tvReason.setVisibility(View.VISIBLE);
+                    if (null != s || !s.equals("")) {
+                        tvReason.setText(getResources().getString(R.string.unqualified_reason) + s);
+                        data.setReason(s);
+                    } else {
+                        tvReason.setText(getResources().getString(R.string.unqualified_reason));
+                        data.setReason("");
+                    }
+
+                    reasonWindow.dismiss();
+                }
+            });
+            reasonWindow.setUnPassButtonOnclickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tvReason.setVisibility(View.VISIBLE);
+                    data.setReason("");
+                    tvReason.setText(getResources().getString(R.string.unqualified_reason));
+                    reasonWindow.dismiss();
+                }
+            });
+        }
+        if (isAllChecked()) {
+            tvNext.setVisibility(View.VISIBLE);
+        }
+
     }
 
     MyPopupWindow reasonWindow;
@@ -125,8 +147,17 @@ public class SiteCheckActivity extends BaseActivity implements CheckResultAdapte
                 .setAnimationStyle(R.style.Animation_CustomPopup)
                 .setPass(getString(R.string.confrim))
                 .setUnpass(getString(R.string.cancel))
-                .setIsUnpassVisiable(false)
+                .setOutSideCancel(false)
+                .setIsUnpassVisiable(true)
                 .builder();
         edtReason = reasonWindow.getContentFrameLayout().findViewById(R.id.edit);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (null != reasonWindow && reasonWindow.isShowing()) {
+            return false;
+        }
+        return super.dispatchTouchEvent(ev);
     }
 }

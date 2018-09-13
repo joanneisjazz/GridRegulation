@@ -14,12 +14,12 @@ import rx.functions.Func2;
  * Created by WZG on 2016/10/17.
  */
 public class RetryWhenNetworkException implements Func1<Observable<? extends Throwable>, Observable<?>> {
-//    retry次数
-    private int count = 3;
-//    延迟
-    private long delay = 3000;
-//    叠加延迟
-    private long increaseDelay = 3000;
+    /* retry次数*/
+    private int count = 1;
+    /*延迟*/
+    private long delay = 100;
+    /*叠加延迟*/
+    private long increaseDelay = 100;
 
     public RetryWhenNetworkException() {
 

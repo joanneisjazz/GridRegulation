@@ -3,12 +3,12 @@ package com.wzgiceman.rxretrofitlibrary.retrofit_rx.subscribers;
 
 import android.os.Handler;
 
-import com.wzgiceman.rxretrofitlibrary.retrofit_rx.download.DownInfo;
-import com.wzgiceman.rxretrofitlibrary.retrofit_rx.download.DownLoadListener.DownloadProgressListener;
-import com.wzgiceman.rxretrofitlibrary.retrofit_rx.download.DownState;
-import com.wzgiceman.rxretrofitlibrary.retrofit_rx.download.HttpDownManager;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.downlaod.DownInfo;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.downlaod.DownLoadListener.DownloadProgressListener;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.downlaod.DownState;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.downlaod.HttpDownManager;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.HttpDownOnNextListener;
-import com.wzgiceman.rxretrofitlibrary.retrofit_rx.utils.DbDownUtil;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.utils.DbDwonUtil;
 
 import java.lang.ref.SoftReference;
 
@@ -29,16 +29,15 @@ public class ProgressDownSubscriber<T> extends Subscriber<T> implements Download
     private Handler handler;
 
 
-    public ProgressDownSubscriber(DownInfo downInfo,Handler handler) {
+    public ProgressDownSubscriber(DownInfo downInfo, Handler handler) {
         this.mSubscriberOnNextListener = new SoftReference<>(downInfo.getListener());
-        this.downInfo=downInfo;
-        this.handler=handler;
+        this.downInfo = downInfo;
+        this.handler = handler;
     }
-
 
     public void setDownInfo(DownInfo downInfo) {
         this.mSubscriberOnNextListener = new SoftReference<>(downInfo.getListener());
-        this.downInfo=downInfo;
+        this.downInfo = downInfo;
     }
 
 
@@ -48,7 +47,7 @@ public class ProgressDownSubscriber<T> extends Subscriber<T> implements Download
      */
     @Override
     public void onStart() {
-        if(mSubscriberOnNextListener.get()!=null){
+        if (mSubscriberOnNextListener.get() != null) {
             mSubscriberOnNextListener.get().onStart();
         }
         downInfo.setState(DownState.START);
@@ -59,12 +58,12 @@ public class ProgressDownSubscriber<T> extends Subscriber<T> implements Download
      */
     @Override
     public void onCompleted() {
-        if(mSubscriberOnNextListener.get()!=null){
+        if (mSubscriberOnNextListener.get() != null) {
             mSubscriberOnNextListener.get().onComplete();
         }
         HttpDownManager.getInstance().remove(downInfo);
         downInfo.setState(DownState.FINISH);
-        DbDownUtil.getInstance().update(downInfo);
+        DbDwonUtil.getInstance().update(downInfo);
     }
 
     /**
@@ -75,12 +74,12 @@ public class ProgressDownSubscriber<T> extends Subscriber<T> implements Download
      */
     @Override
     public void onError(Throwable e) {
-        if(mSubscriberOnNextListener.get()!=null){
+        if (mSubscriberOnNextListener.get() != null) {
             mSubscriberOnNextListener.get().onError(e);
         }
         HttpDownManager.getInstance().remove(downInfo);
         downInfo.setState(DownState.ERROR);
-        DbDownUtil.getInstance().update(downInfo);
+        DbDwonUtil.getInstance().update(downInfo);
     }
 
     /**

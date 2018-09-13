@@ -1,8 +1,23 @@
 package com.wzgiceman.rxretrofitlibrary.retrofit_rx.utils;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
+import android.util.DisplayMetrics;
+import android.view.Display;
+import android.view.WindowManager;
+
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.downlaod.DownInfo;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
+
+import okhttp3.ResponseBody;
 
 /**
  * 方法工具类
@@ -51,6 +66,66 @@ public class AppUtil {
             url = url.substring(0, index + 1);
         }
         return head + url;
+    }
+
+
+    /**
+     * 写入文件
+     * @param file
+     * @param info
+     * @throws IOException
+     */
+    public  static  void writeCache(ResponseBody responseBody, File file, DownInfo info) throws IOException{
+        if (!file.getParentFile().exists())
+            file.getParentFile().mkdirs();
+        long allLength;
+        if (info.getCountLength()==0){
+            allLength=responseBody.contentLength();
+        }else{
+            allLength=info.getCountLength();
+        }
+        FileChannel channelOut = null;
+        RandomAccessFile randomAccessFile = null;
+        randomAccessFile = new RandomAccessFile(file, "rwd");
+        channelOut = randomAccessFile.getChannel();
+        MappedByteBuffer mappedBuffer = channelOut.map(FileChannel.MapMode.READ_WRITE,
+                info.getReadLength(),allLength-info.getReadLength());
+        byte[] buffer = new byte[1024*8];
+        int len;
+        int record = 0;
+        while ((len = responseBody.byteStream().read(buffer)) != -1) {
+            mappedBuffer.put(buffer, 0, len);
+            record += len;
+        }
+        responseBody.byteStream().close();
+        if (channelOut != null) {
+            channelOut.close();
+        }
+        if (randomAccessFile != null) {
+            randomAccessFile.close();
+        }
+    }
+
+    /**
+     * 是否有底部虚拟导航栏
+     */
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    public static boolean hasNavigationBarShow(WindowManager wm){
+        Display display = wm.getDefaultDisplay();
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        //获取整个屏幕的高度
+        display.getRealMetrics(outMetrics);
+        int heightPixels = outMetrics.heightPixels;
+        int widthPixels = outMetrics.widthPixels;
+        //获取内容展示部分的高度
+        outMetrics = new DisplayMetrics();
+        display.getMetrics(outMetrics);
+        int heightPixels2 = outMetrics.heightPixels;
+        int widthPixels2 = outMetrics.widthPixels;
+        int w = widthPixels-widthPixels2;
+        int h = heightPixels-heightPixels2;
+        return  w>0||h>0;//竖屏和横屏两种情况。
     }
 
     /**

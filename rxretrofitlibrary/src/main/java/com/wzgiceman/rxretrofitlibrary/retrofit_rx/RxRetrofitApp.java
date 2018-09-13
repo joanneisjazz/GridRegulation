@@ -7,9 +7,9 @@ import android.app.Application;
  * Created by WZG on 2016/12/12.
  */
 
-public class RxRetrofitApp {
+public class RxRetrofitApp  {
     private static Application application;
-    private static boolean debug;
+    private static boolean debug = true;
 
 
     public static void init(Application app){

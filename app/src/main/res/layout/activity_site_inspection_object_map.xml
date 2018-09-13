@@ -6,8 +6,6 @@
 
     <include layout="@layout/toobar_layout"></include>
 
-
-
     <com.baidu.mapapi.map.MapView
         android:id="@+id/mapview"
         android:layout_width="match_parent"

@@ -8,11 +8,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.jstech.gridregulation.ConstantValue;
 import com.jstech.gridregulation.R;
 import com.jstech.gridregulation.adapter.CheckTableSelectAdapter;
+import com.jstech.gridregulation.api.GetTableApi;
+import com.jstech.gridregulation.api.MyUrl;
 import com.jstech.gridregulation.base.BaseActivity;
 import com.jstech.gridregulation.bean.CheckTableBean;
 import com.jstech.gridregulation.utils.LogUtils;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.exception.ApiException;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.http.HttpManager;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.HttpOnNextListener;
 
 import java.util.ArrayList;
 
@@ -21,7 +29,7 @@ import butterknife.BindView;
 /**
  * 选择检查表
  */
-public class CheckTableSelectActivity extends BaseActivity implements CheckTableSelectAdapter.SelectInterface, View.OnClickListener {
+public class CheckTableSelectActivity extends BaseActivity implements CheckTableSelectAdapter.SelectInterface, View.OnClickListener, HttpOnNextListener {
 
     @BindView(R.id.recyclerview_table)
     RecyclerView rvTable;
@@ -34,7 +42,8 @@ public class CheckTableSelectActivity extends BaseActivity implements CheckTable
     ArrayList<CheckTableBean> mSelectedList = new ArrayList<>();//选中的检查表
 
     CheckTableSelectAdapter mAdapter;
-
+    HttpManager manager;
+    GetTableApi getTableApi;
 
     @Override
     protected int getLayoutId() {
@@ -43,13 +52,17 @@ public class CheckTableSelectActivity extends BaseActivity implements CheckTable
 
     @Override
     public void initView() {
-        initList();
+
         LogUtils.d("" + mCheckTableBeanList.size());
         mAdapter = new CheckTableSelectAdapter(mCheckTableBeanList, this, R.layout.item_check_table_select, this);
         rvTable.setLayoutManager(new LinearLayoutManager(this));
         rvTable.setAdapter(mAdapter);
         ckbAllSelect.setOnClickListener(this);
         btnSave.setOnClickListener(this);
+
+        manager = new HttpManager(this, this);
+        getTableApi = new GetTableApi();
+        manager.doHttpDeal(getTableApi);
     }
 
     /**
@@ -97,15 +110,21 @@ public class CheckTableSelectActivity extends BaseActivity implements CheckTable
         return true;
     }
 
+    String tableId = "";
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             //保存
             case R.id.btn_save:
+                for (CheckTableBean b : mSelectedList) {
+                    tableId = tableId + "," + b.getId();
+                }
+//                tableId = tableId.replace(",", "");
+                tableId = tableId.substring(1, tableId.length());
+                LogUtils.d(tableId);
                 Intent intent = new Intent(this, CheckItemSelectActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("data", mSelectedList);
-                intent.putExtras(bundle);
+                intent.putExtra("tableId", tableId);
                 startActivity(intent);
                 break;
             //全部选中
@@ -136,13 +155,25 @@ public class CheckTableSelectActivity extends BaseActivity implements CheckTable
         mAdapter.notifyDataSetChanged();
     }
 
-    private void initList() {
-        for (int i = 0; i < 6; i++) {
-            CheckTableBean b = new CheckTableBean();
-            b.setSelected(false);
-            b.setId(i + "");
-            b.setTableName("检查表" + i);
-            mCheckTableBeanList.add(b);
+    @Override
+    public void onNext(String resulte, String method) {
+        LogUtils.d(resulte);
+        LogUtils.d(method);
+        JSONObject o = JSON.parseObject(resulte);
+        String code = o.getString(ConstantValue.CODE);
+        if (method.equals(MyUrl.GET_TABLE)) {
+            if ("200".equals(code)) {
+                mCheckTableBeanList.clear();
+                mCheckTableBeanList.addAll((ArrayList<CheckTableBean>) o.getJSONArray(ConstantValue.RESULT).toJavaList(CheckTableBean.class));
+//                addOverLay();
+                mAdapter.notifyDataSetChanged();
+                LogUtils.d(mCheckTableBeanList.size() + "");
+            }
         }
+    }
+
+    @Override
+    public void onError(ApiException e, String method) {
+
     }
 }

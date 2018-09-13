@@ -28,7 +28,7 @@ public class CheckTableSelectAdapter extends BaseRecyclerAdapter<CheckTableBean>
     protected void bindItemData(ViewHolder viewHolder, final CheckTableBean data, final int position) {
         TextView tvContent = viewHolder.getView(R.id.tv_content);
         final CheckBox ckbSelect = viewHolder.getView(R.id.ckb_select);
-        tvContent.setText(data.getTableName());
+        tvContent.setText(data.getName());
         ckbSelect.setChecked(data.isSelected());
         ckbSelect.setOnClickListener(new View.OnClickListener() {
             @Override

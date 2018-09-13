@@ -34,9 +34,8 @@ public class CheckItemSelectAdapter extends BaseRecyclerAdapter<CheckItemBean> {
         ckbSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                data.setSelected(ckbSelect.isSelected());
                 if (null != selectListener) {
-                    selectListener.select(position, ckbSelect.isSelected());
+                    selectListener.select(position);
                 }
             }
         });
@@ -51,8 +50,8 @@ public class CheckItemSelectAdapter extends BaseRecyclerAdapter<CheckItemBean> {
          * checkbox状态改变触发的事件
          *
          * @param position   检查表的位置
-         * @param isSelected 检查表是否选中
+         * @param
          */
-        void select(int position, boolean isSelected);
+        void select(int position);
     }
 }

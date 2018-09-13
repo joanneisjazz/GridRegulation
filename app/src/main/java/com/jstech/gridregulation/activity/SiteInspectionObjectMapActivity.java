@@ -8,8 +8,9 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -27,10 +28,16 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.jstech.gridregulation.ConstantValue;
 import com.jstech.gridregulation.R;
+import com.jstech.gridregulation.api.GetObjectApi;
+import com.jstech.gridregulation.api.MyUrl;
 import com.jstech.gridregulation.base.BaseActivity;
 import com.jstech.gridregulation.bean.RegulateObjectBean;
+import com.jstech.gridregulation.utils.LogUtils;
 import com.jstech.gridregulation.utils.SystemUtil;
 import com.jstech.gridregulation.widget.MapBottomWindow;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.exception.ApiException;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.http.HttpManager;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.HttpOnNextListener;
 
 import java.util.ArrayList;
 
@@ -38,7 +45,7 @@ import butterknife.BindView;
 
 @SuppressLint("Registered")
 public class SiteInspectionObjectMapActivity extends BaseActivity implements
-        SensorEventListener, BaiduMap.OnMarkerClickListener, MapBottomWindow.TaskInterface {
+        SensorEventListener, BaiduMap.OnMarkerClickListener, MapBottomWindow.TaskInterface, HttpOnNextListener {
 
     @BindView(R.id.mapview)
     MapView mMapView;
@@ -51,8 +58,8 @@ public class SiteInspectionObjectMapActivity extends BaseActivity implements
     private SensorManager sensorManager;
     private double lastX = 0.0;
     //112.787601,38.068948 测试的
-    private double mCurrentLat = 38.068948;
-    private double mCurrentLon = 112.787601;
+    private double mCurrentLat = 37.760252;
+    private double mCurrentLon = 112.48668;
     private int mCurrentDirection = 0;
     private float mCurrentAccracy;
 
@@ -62,6 +69,8 @@ public class SiteInspectionObjectMapActivity extends BaseActivity implements
     ArrayList<RegulateObjectBean> mRegulateObjectArrayList = new ArrayList<>();//监管对象list
 
     MapBottomWindow window;
+    HttpManager manager;
+    GetObjectApi getObjectApi;
 
     @Override
     protected int getLayoutId() {
@@ -72,12 +81,17 @@ public class SiteInspectionObjectMapActivity extends BaseActivity implements
     public void initView() {
         setMap();
         initWindow();
+
+
         MyLocationData locData = new MyLocationData.Builder().accuracy(mCurrentAccracy).direction(mCurrentDirection)
                 .latitude(mCurrentLat).longitude(mCurrentLon).build();
         mBaiduMap.setMyLocationData(locData);
         mBaiduMap.setMyLocationConfiguration(new MyLocationConfiguration(mCurrentMode, true, null));
         mMapView.setLogoPosition(LogoPosition.logoPostionCenterBottom);
-        initList();
+        manager = new HttpManager(this, this);
+        getObjectApi = new GetObjectApi();
+        getObjectApi.setId("140100");
+        manager.doHttpDeal(getObjectApi);
     }
 
     private void setMap() {
@@ -94,7 +108,6 @@ public class SiteInspectionObjectMapActivity extends BaseActivity implements
         mLocClient.setLocOption(option);
         mLocClient.start();
         mBaiduMap.setOnMarkerClickListener(this);
-        initList();
     }
 
     private void initWindow() {
@@ -107,43 +120,6 @@ public class SiteInspectionObjectMapActivity extends BaseActivity implements
                 .builder();
     }
 
-    private void initList() {
-        mRegulateObjectArrayList.clear();
-        for (int i = 0; i < 4; i++) {
-            RegulateObjectBean object = new RegulateObjectBean();
-            object.setName("企业" + i);
-            object.setAddress("地址" + i);
-            object.setDetails("详情" + i);
-            object.setTel("电话" + i);
-            switch (i) {
-                case 0:
-                    object.setStatus(0);
-                    object.setLatitude(38.071902);
-                    object.setLongitude(112.79026);
-                    break;
-                case 1:
-                    object.setStatus(0);
-                    object.setLatitude(38.067244);
-                    object.setLongitude(112.792416);
-                    break;
-                case 2:
-                    object.setStatus(1);
-                    object.setLatitude(38.07338);
-                    object.setLongitude(112.76712);
-                    break;
-                case 3:
-                    object.setStatus(1);
-                    object.setLatitude(38.065255);
-                    object.setLongitude(112.781636);
-                    break;
-                default:
-                    break;
-            }
-            mRegulateObjectArrayList.add(object);
-        }
-        addOverLay();
-    }
-
     //测试的监管对象
     private void addOverLay() {
 //        LatLng llA = new LatLng(38.071902, 112.79026);//112.79026,38.071902
@@ -154,7 +130,7 @@ public class SiteInspectionObjectMapActivity extends BaseActivity implements
         int markerIcon = -1;
         for (RegulateObjectBean o : mRegulateObjectArrayList) {
             LatLng ll = new LatLng(o.getLatitude(), o.getLongitude());
-            if (o.getStatus() == 0) {//生产经营主体
+            if ("0".equals(o.getNature())) {//生产经营主体
                 markerIcon = R.drawable.icon_marka;
             } else {//农资门店
                 markerIcon = R.drawable.icon_markb;
@@ -222,10 +198,11 @@ public class SiteInspectionObjectMapActivity extends BaseActivity implements
             if (marker == o.getMarker()) {
                 window.setObj(o);
                 window.getTvAddress().setText(o.getAddress());
-                window.getTvDetails().setText(o.getDetails());
+                window.getTvDetails().setText(o.getBelongedTrade());
                 window.getTvDistance().setText("300m");
                 window.getTvObjectName().setText(o.getName());
-                if (o.getStatus() == 0) {
+                window.getTvTel().setText(o.getContactPhone());
+                if (o.getStatus() == ConstantValue.OBJ_CHECK_STATUS_NEW) {
                     staus = "开启新的检查";
                 } else {
                     staus = "继续检查";
@@ -233,7 +210,7 @@ public class SiteInspectionObjectMapActivity extends BaseActivity implements
                 window.getBtnCheck().setText(staus);
 
                 window.showAtLocation(getLayoutId(), Gravity.BOTTOM, 0, 0);
-                Toast.makeText(SiteInspectionObjectMapActivity.this, o.getAddress(), Toast.LENGTH_LONG).show();
+//                Toast.makeText(SiteInspectionObjectMapActivity.this, o.getAddress(), Toast.LENGTH_LONG).show();
             }
         }
         return true;
@@ -244,12 +221,33 @@ public class SiteInspectionObjectMapActivity extends BaseActivity implements
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
         bundle.putSerializable("data", objectBean);
-        if (objectBean.getStatus() == 0) {
+        if (objectBean.getStatus() == ConstantValue.OBJ_CHECK_STATUS_NEW) {
             intent.setClass(this, CheckTableSelectActivity.class);
         } else {
             intent.setClass(this, CheckItemSelectActivity.class);
         }
         startActivity(intent);
+    }
+
+    @Override
+    public void onNext(String resulte, String method) {
+        LogUtils.d(resulte);
+        LogUtils.d(method);
+        JSONObject o = JSON.parseObject(resulte);
+        String code = o.getString(ConstantValue.CODE);
+        if (method.equals(MyUrl.GET_ENTERPRISE)) {
+            if ("200".equals(code)) {
+                mRegulateObjectArrayList = (ArrayList<RegulateObjectBean>) o.getJSONArray(ConstantValue.RESULT).toJavaList(RegulateObjectBean.class);
+                addOverLay();
+                LogUtils.d(mRegulateObjectArrayList.size() + "");
+            }
+        }
+    }
+
+    @Override
+    public void onError(ApiException e, String method) {
+
+        LogUtils.d(e.getMessage());
     }
 
     /**

@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import com.jstech.gridregulation.MainActivity;
 import com.jstech.gridregulation.R;
-import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.utils.AppUtil;
 
 import butterknife.BindView;

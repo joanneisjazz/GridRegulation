@@ -1,55 +1,49 @@
 package com.wzgiceman.rxretrofitlibrary.retrofit_rx.Api;
 
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
-import com.wzgiceman.rxretrofitlibrary.retrofit_rx.exception.HttpTimeException;
-import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.HttpOnNextListener;
-
-import java.lang.ref.SoftReference;
-
 import retrofit2.Retrofit;
 import rx.Observable;
-import rx.functions.Func1;
 
 /**
- * 请求数据统一封装类
- * Created by WZG on 2016/7/16.
+ * Describe:请求数据统一封装类
+ * <p>
+ * Created by zhigang wei
+ * on 2017/8/29.
+ * <p>
+ * Company :Sichuan Ziyan
  */
-public abstract class BaseApi<T> implements Func1<BaseResultEntity<T>, T> {
-    //rx生命周期管理
-    private SoftReference<RxAppCompatActivity> rxAppCompatActivity;
-    /*回调*/
-    private SoftReference<HttpOnNextListener> listener;
+public abstract class BaseApi {
     /*是否能取消加载框*/
-    private boolean cancel;
+    private transient boolean cancel = true;
     /*是否显示加载框*/
-    private boolean showProgress;
+    private transient boolean showProgress = true;
     /*是否需要缓存处理*/
-    private boolean cache;
+    protected transient boolean cache = false;
+    /*固定基础url*/
+    public transient static final String BASE_URL = "http://192.168.1.110:8090/";
     /*基础url*/
-    private String baseUrl = "https://www.izaodao.com/Api/";
+    private transient static String baseUrl;
     /*方法-如果需要缓存必须设置这个参数；不需要不用設置*/
-    private String method="";
-    /*超时时间-默认6秒*/
-    private int connectionTime = 6;
-    /*有网情况下的本地缓存时间默认60秒*/
-    private int cookieNetWorkTime = 60;
+    private transient String method = "";
+    /*超时时间-默认10秒*/
+    private transient int connectionTime = 15;
+    /*有网情况下的本地缓存时间默xxx秒*/
+    private transient int cookieNetWorkTime = 60;
     /*无网络的情况下本地缓存时间默认30天*/
-    private int cookieNoNetWorkTime = 24 * 60 * 60 * 30;
-    /* 失败后retry次数*/
-    private int retryCount = 1;
-    /*失败后retry延迟*/
-    private long retryDelay = 100;
-    /*失败后retry叠加延迟*/
-    private long retryIncreaseDelay = 10;
-    /*缓存url-可手动设置*/
-    private String cacheUrl;
-
-    public BaseApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
-        setListener(listener);
-        setRxAppCompatActivity(rxAppCompatActivity);
-        setShowProgress(true);
-        setCache(true);
-    }
+    private transient int cookieNoNetWorkTime = 24 * 60 * 60 * 30;
+    /* retry次数*/
+    private transient int retryCount = 0;
+    /*retry延迟*/
+    private transient long retryDelay = 100;
+    /*retry叠加延迟*/
+    private transient long retryIncreaseDelay = 100;
+    /*缓存url*/
+    private transient String cacheUrl;
+    /*常用服务器校验字段*/
+    private transient static String config;
+    /*忽略结果判断*/
+    private transient boolean ignorJudge;
+    /*忽略自带sub处理*/
+    private transient boolean noSub;
 
     /**
      * 设置参数
@@ -59,6 +53,13 @@ public abstract class BaseApi<T> implements Func1<BaseResultEntity<T>, T> {
      */
     public abstract Observable getObservable(Retrofit retrofit);
 
+    public boolean isNoSub() {
+        return noSub;
+    }
+
+    public void setNoSub(boolean noSub) {
+        this.noSub = noSub;
+    }
 
     public int getCookieNoNetWorkTime() {
         return cookieNoNetWorkTime;
@@ -76,7 +77,6 @@ public abstract class BaseApi<T> implements Func1<BaseResultEntity<T>, T> {
         this.cookieNetWorkTime = cookieNetWorkTime;
     }
 
-
     public int getConnectionTime() {
         return connectionTime;
     }
@@ -85,17 +85,8 @@ public abstract class BaseApi<T> implements Func1<BaseResultEntity<T>, T> {
         this.connectionTime = connectionTime;
     }
 
-
-    public String getMethod() {
-        return method;
-    }
-
-    public void setMethod(String method) {
-        this.method = method;
-    }
-
     public String getBaseUrl() {
-        return baseUrl;
+        return isEmpty(baseUrl) ? BASE_URL : baseUrl;
     }
 
     public void setBaseUrl(String baseUrl) {
@@ -103,15 +94,7 @@ public abstract class BaseApi<T> implements Func1<BaseResultEntity<T>, T> {
     }
 
     public String getUrl() {
-        /*在没有手动设置url情况下，简单拼接*/
-        if (null == getCacheUrl() || "".equals(getCacheUrl())) {
-            return getBaseUrl() + getMethod();
-        }
-        return getCacheUrl();
-    }
-
-    public void setRxAppCompatActivity(RxAppCompatActivity rxAppCompatActivity) {
-        this.rxAppCompatActivity = new SoftReference(rxAppCompatActivity);
+        return getBaseUrl() + getMethod();
     }
 
     public boolean isCache() {
@@ -138,14 +121,13 @@ public abstract class BaseApi<T> implements Func1<BaseResultEntity<T>, T> {
         this.cancel = cancel;
     }
 
-    public SoftReference<HttpOnNextListener> getListener() {
-        return listener;
+    public String getMethod() {
+        return method;
     }
 
-    public void setListener(HttpOnNextListener listener) {
-        this.listener = new SoftReference(listener);
+    public void setMethod(String method) {
+        this.method = method;
     }
-
 
     public int getRetryCount() {
         return retryCount;
@@ -171,28 +153,28 @@ public abstract class BaseApi<T> implements Func1<BaseResultEntity<T>, T> {
         this.retryIncreaseDelay = retryIncreaseDelay;
     }
 
-    /*
-         * 获取当前rx生命周期
-         * @return
-         */
-    public RxAppCompatActivity getRxAppCompatActivity() {
-        return rxAppCompatActivity.get();
+    public boolean isIgnorJudge() {
+        return ignorJudge;
     }
 
-    @Override
-    public T call(BaseResultEntity<T> httpResult) {
-        if (httpResult.getRet() == 0) {
-            throw new HttpTimeException(httpResult.getMsg());
-        }
-        return httpResult.getData();
+    public void setIgnorJudge(boolean ignorJudge) {
+        this.ignorJudge = ignorJudge;
     }
 
 
     public String getCacheUrl() {
+        if (isEmpty(cacheUrl)) {
+            return getUrl();
+        }
         return cacheUrl;
     }
 
     public void setCacheUrl(String cacheUrl) {
         this.cacheUrl = cacheUrl;
+    }
+
+
+    private boolean isEmpty(String str) {
+        return str == null || str.trim().length() == 0 || str.equals("null");
     }
 }

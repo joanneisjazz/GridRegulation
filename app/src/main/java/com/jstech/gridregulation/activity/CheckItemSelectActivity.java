@@ -9,10 +9,20 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.jstech.gridregulation.ConstantValue;
 import com.jstech.gridregulation.R;
 import com.jstech.gridregulation.adapter.CheckItemSelectAdapter;
+import com.jstech.gridregulation.api.GetItemApi;
+import com.jstech.gridregulation.api.MyUrl;
 import com.jstech.gridregulation.base.BaseActivity;
 import com.jstech.gridregulation.bean.CheckItemBean;
+import com.jstech.gridregulation.bean.CheckTableBean;
+import com.jstech.gridregulation.utils.LogUtils;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.exception.ApiException;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.http.HttpManager;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.HttpOnNextListener;
 
 import java.util.ArrayList;
 
@@ -22,7 +32,7 @@ import butterknife.BindView;
  * 选择检查项目
  */
 public class CheckItemSelectActivity extends BaseActivity implements
-        CheckItemSelectAdapter.SelectInterface, View.OnClickListener {
+        CheckItemSelectAdapter.SelectInterface, View.OnClickListener, HttpOnNextListener {
 
     @BindView(R.id.recyclerview_table)
     RecyclerView rvTable;
@@ -36,6 +46,11 @@ public class CheckItemSelectActivity extends BaseActivity implements
 
     CheckItemSelectAdapter mAdapter;
 
+    HttpManager manager;
+    GetItemApi getItemApi;
+
+    String tableId;
+
 
     @Override
     protected int getLayoutId() {
@@ -47,22 +62,27 @@ public class CheckItemSelectActivity extends BaseActivity implements
 
     @Override
     public void initView() {
-        initList();
+        tableId = getIntent().getStringExtra("tableId");
+//        initList();
         mAdapter = new CheckItemSelectAdapter(mCheckItemBeanList, this, R.layout.item_check_table_select, this);
         rvTable.setLayoutManager(new LinearLayoutManager(this));
         rvTable.setAdapter(mAdapter);
         ckbAllSelect.setOnClickListener(this);
         btnSave.setOnClickListener(this);
+        manager = new HttpManager(this, this);
+        getItemApi = new GetItemApi();
+        getItemApi.setParam(tableId);
+        manager.doHttpDeal(getItemApi);
     }
 
     /**
      * 检查表单项选择
      *
-     * @param position   检查表的位置
-     * @param isSelected 检查表是否选中
+     * @param position 检查项目的位置
+     * @param
      */
     @Override
-    public void select(int position, boolean isSelected) {
+    public void select(int position) {
         if (mCheckItemBeanList.get(position).isSelected()) {
             mCheckItemBeanList.get(position).setSelected(false);
         } else {
@@ -141,13 +161,25 @@ public class CheckItemSelectActivity extends BaseActivity implements
         mAdapter.notifyDataSetChanged();
     }
 
-    private void initList() {
-        for (int i = 0; i < 9; i++) {
-            CheckItemBean b = new CheckItemBean();
-            b.setSelected(false);
-            b.setId(i + "");
-            b.setContent("检查项目" + i);
-            mCheckItemBeanList.add(b);
+    @Override
+    public void onNext(String resulte, String method) {
+        LogUtils.d(resulte);
+        LogUtils.d(method);
+        JSONObject o = JSON.parseObject(resulte);
+        String code = o.getString(ConstantValue.CODE);
+        if (method.equals(MyUrl.GET_ITEM)) {
+            if ("200".equals(code)) {
+                mCheckItemBeanList.clear();
+                mCheckItemBeanList.addAll((ArrayList<CheckItemBean>) o.getJSONArray(ConstantValue.RESULT).toJavaList(CheckItemBean.class));
+//                addOverLay();
+                mAdapter.notifyDataSetChanged();
+                LogUtils.d(mCheckItemBeanList.size() + "");
+            }
         }
+    }
+
+    @Override
+    public void onError(ApiException e, String method) {
+
     }
 }

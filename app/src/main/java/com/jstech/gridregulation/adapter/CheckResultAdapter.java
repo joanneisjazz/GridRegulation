@@ -51,9 +51,10 @@ public class CheckResultAdapter extends BaseRecyclerAdapter<CheckItemBean> {
         tvQualified.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                data.setResult("2");
                 setSelectStyle(tvQualified, tvBasicQualified, tvUnqualified);
                 tvUnqualifiedReason.setVisibility(View.GONE);
+                listener.selectResult(0,data, viewHolder);
+
             }
         });
 
@@ -61,9 +62,10 @@ public class CheckResultAdapter extends BaseRecyclerAdapter<CheckItemBean> {
         tvBasicQualified.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                data.setResult("1");
                 setSelectStyle(tvBasicQualified, tvQualified, tvUnqualified);
                 tvUnqualifiedReason.setVisibility(View.GONE);
+                listener.selectResult(1,data, viewHolder);
+
             }
         });
 
@@ -74,7 +76,7 @@ public class CheckResultAdapter extends BaseRecyclerAdapter<CheckItemBean> {
                 data.setResult("3");
                 setSelectStyle(tvUnqualified, tvQualified, tvBasicQualified);
 //                tvUnqualifiedReason.setVisibility(View.VISIBLE);
-                listener.showUnqualifiedReason(data, viewHolder);
+                listener.selectResult(2,data, viewHolder);
             }
         });
     }
@@ -82,7 +84,7 @@ public class CheckResultAdapter extends BaseRecyclerAdapter<CheckItemBean> {
     public interface MethodInterface {
         void showMethod(String id);
 
-        void showUnqualifiedReason(CheckItemBean data, ViewHolder viewHolder);
+        void selectResult(int result, CheckItemBean data, ViewHolder viewHolder);
     }
 
     /**

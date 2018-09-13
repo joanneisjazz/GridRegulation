@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -49,7 +50,7 @@ public class MyPopupWindow {
         }
     }
 
-    public MyPopupWindow(Builder builder) {
+    public MyPopupWindow(final Builder builder) {
         mContext = builder.context;
         contentview = LayoutInflater.from(mContext).inflate(R.layout.layout_popup_window, null);
         mPopupWindow =
@@ -60,6 +61,8 @@ public class MyPopupWindow {
         contentFrameLayout = contentview.findViewById(R.id.frame_content);
 
         contentFrameLayout.addView(LayoutInflater.from(mContext).inflate(builder.contentviewid, null));
+        mPopupWindow.setOutsideTouchable(builder.outsidecancel);
+        mPopupWindow.setFocusable(builder.fouse);
         titleTextView.setText(builder.title);
         passButton.setText(builder.pass);
         setPassButtonOnclickListener(builder.passListener);
@@ -79,6 +82,18 @@ public class MyPopupWindow {
             @Override
             public void onDismiss() {
                 SystemUtil.setBackgroundAlpha(1.0f, (Activity) mContext);
+            }
+        });
+        mPopupWindow.setTouchInterceptor(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (!builder.outsidecancel) {
+                    View view = mPopupWindow.getContentView();
+                    if (null != view) {
+                        view.dispatchTouchEvent(event);
+                    }
+                }
+                return !builder.outsidecancel;
             }
         });
 

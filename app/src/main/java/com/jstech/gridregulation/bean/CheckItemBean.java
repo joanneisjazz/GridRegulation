@@ -3,11 +3,25 @@ package com.jstech.gridregulation.bean;
 import java.io.Serializable;
 
 public class CheckItemBean implements Serializable{
-    private String id;
-    private String content;
+
+
+
     private boolean isSelected;
     private String result;
     private String reason;
+    /**
+     * id : 1636f6d8ef5348168bb11f2be730e943
+     * content : 测试
+     * method : 测试
+     * iskey : 0
+     * tableid : 51a83f55ef89426699ca7888cf931f10
+     */
+
+    private String id;
+    private String content;
+    private String method;
+    private String iskey;
+    private String tableid;
 
     public String getReason() {
         return reason;
@@ -47,5 +61,29 @@ public class CheckItemBean implements Serializable{
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
+    }
+
+    public String getIskey() {
+        return iskey;
+    }
+
+    public void setIskey(String iskey) {
+        this.iskey = iskey;
+    }
+
+    public String getTableid() {
+        return tableid;
+    }
+
+    public void setTableid(String tableid) {
+        this.tableid = tableid;
     }
 }

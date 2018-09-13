@@ -6,6 +6,17 @@ import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
 
 public class MyApplication extends Application {
+    //服务器 url
+    private static String url;
+
+    public static String getUrl() {
+        return url;
+    }
+
+    public static void setUrl(String url) {
+        MyApplication.url = url;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();

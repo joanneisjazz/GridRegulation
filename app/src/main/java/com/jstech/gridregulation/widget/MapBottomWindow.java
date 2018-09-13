@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.PopupWindow;
@@ -21,7 +22,7 @@ import com.jstech.gridregulation.utils.SystemUtil;
 public class MapBottomWindow {
 
     PopupWindow mPopupWindow;
-    TextView tvObjectName,tvAddress, tvDistance, tvDetails, tvTel;
+    TextView tvObjectName, tvAddress, tvDistance, tvDetails, tvTel;
     Button btnCheck;
     private Context mContext;
     View contentview;
@@ -36,7 +37,7 @@ public class MapBottomWindow {
         contentview = LayoutInflater.from(mContext).inflate(R.layout.layout_map_bottom_window, null);
         mPopupWindow =
                 new PopupWindow(contentview, builder.width, builder.height, builder.fouse);
-        tvAddress = contentview.findViewById(R.id.tv_object_name);
+        tvAddress = contentview.findViewById(R.id.tv_address);
         tvDistance = contentview.findViewById(R.id.tv_distance);
         tvDetails = contentview.findViewById(R.id.tv_details);
         tvTel = contentview.findViewById(R.id.tv_tel);
@@ -47,12 +48,13 @@ public class MapBottomWindow {
         btnCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (obj!=null){
+                if (obj != null) {
                     builder.listener.task(obj);
                 }
             }
         });
-        mPopupWindow.setOutsideTouchable(builder.outsidecancel);
+        mPopupWindow.setFocusable(builder.fouse);
+        mPopupWindow.setOutsideTouchable(false);
         mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
         mPopupWindow.setAnimationStyle(builder.animstyle);
         mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
@@ -61,6 +63,8 @@ public class MapBottomWindow {
                 SystemUtil.setBackgroundAlpha(1.0f, (Activity) mContext);
             }
         });
+
+
     }
 
     /**
@@ -97,7 +101,7 @@ public class MapBottomWindow {
         private int animstyle;
         private String status;
         private TaskInterface listener;
-
+        private RegulateObjectBean obj;
         private Context context;
 
         public Builder setStatus(String status) {
@@ -256,7 +260,7 @@ public class MapBottomWindow {
         return this;
     }
 
-    public interface TaskInterface{
+    public interface TaskInterface {
         void task(RegulateObjectBean objectBean);
     }
 }
