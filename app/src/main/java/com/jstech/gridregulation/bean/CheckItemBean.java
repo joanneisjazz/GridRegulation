@@ -7,6 +7,15 @@ public class CheckItemBean implements Serializable{
     private String content;
     private boolean isSelected;
     private String result;
+    private String reason;
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
 
     public String getResult() {
         return result;

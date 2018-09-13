@@ -90,19 +90,25 @@ public class SiteCheckActivity extends BaseActivity implements CheckResultAdapte
      * @param viewHolder
      */
     @Override
-    public void showUnqualifiedReason(CheckItemBean data, final BaseRecyclerAdapter.ViewHolder viewHolder) {
+    public void showUnqualifiedReason(final CheckItemBean data, final BaseRecyclerAdapter.ViewHolder viewHolder) {
         data.setResult("3");
+        final TextView tvReason = viewHolder.getView(R.id.tv_unqualified_reason);
         reasonWindow.showAtLocation(getLayoutId(), Gravity.CENTER, 0, 0);
         reasonWindow.getPassButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TextView textView = viewHolder.getView(R.id.tv_unqualified_reason);
-                if (null != edtReason.getText()) {
-                    textView.setText(R.string.unqualified_reason + edtReason.getText().toString());
-                } else {
-                    textView.setText(R.string.unqualified_reason);
+                tvReason.setVisibility(View.VISIBLE);
+                String reason = data.getReason();
+                if (null != reason && !"".equals(reason)) {
+                    edtReason.setText(reason);
                 }
-                reasonWindow.dismiss();
+                reasonWindow.setPassButtonOnclickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        data.setReason(edtReason.getText().toString());
+
+                    }
+                });
             }
         });
     }
