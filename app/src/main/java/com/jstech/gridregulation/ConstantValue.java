@@ -18,5 +18,10 @@ public class ConstantValue {
     final public static int OBJ_CHECK_STATUS_NEW = 0;//企业的检查状态--开启新的检查
     final public static int OBJ_CHECK_STATUS_CONTINUE = 1;//继续检查
 
+    final public static String KEY_OBJECT_BEAN = "KEY_OBJECT_BEAN";
+    final public static String KEY_OBJECT_ID = "KEY_OBJECT_ID";
+
+    final public static String KEY_TABLE_ID = "KEY_TABLE_ID";
+
 
 }

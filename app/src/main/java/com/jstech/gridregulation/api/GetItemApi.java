@@ -30,7 +30,7 @@ public class GetItemApi extends BaseApi {
     public Observable getObservable(Retrofit retrofit) {
         HttpPostService service = retrofit.create(HttpPostService.class);
 //        return service.enterprise(getId(),"");
-        return service.getTable(MyUrl.GET_ITEM + getParam());
+        return service.getItem(MyUrl.GET_ITEM + getParam());
 
     }
 }

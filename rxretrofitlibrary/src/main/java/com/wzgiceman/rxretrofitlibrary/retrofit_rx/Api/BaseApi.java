@@ -19,7 +19,7 @@ public abstract class BaseApi {
     /*是否需要缓存处理*/
     protected transient boolean cache = false;
     /*固定基础url*/
-    public transient static final String BASE_URL = "http://192.168.1.110:8090/";
+    public transient static final String BASE_URL = "http://192.168.1.105:8090/";
     /*基础url*/
     private transient static String baseUrl;
     /*方法-如果需要缓存必须设置这个参数；不需要不用設置*/

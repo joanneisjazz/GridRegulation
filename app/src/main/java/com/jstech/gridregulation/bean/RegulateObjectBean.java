@@ -2,14 +2,23 @@ package com.jstech.gridregulation.bean;
 
 import com.baidu.mapapi.map.Marker;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.NotNull;
+import org.greenrobot.greendao.annotation.Transient;
+
 import java.io.Serializable;
+
+import org.greenrobot.greendao.annotation.Generated;
 
 /**
  * 监管对象的实体类
  */
+@Entity
 public class RegulateObjectBean implements Serializable {
 
 
+    @Transient
     private Marker marker;
     /**
      * id : 2
@@ -28,7 +37,8 @@ public class RegulateObjectBean implements Serializable {
      * entregion : 140110001
      */
 
-    private String id;
+    @Id
+    private long id;
     private String name;
     private String nature;
     private String code;
@@ -158,11 +168,11 @@ public class RegulateObjectBean implements Serializable {
         this.entregion = entregion;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -172,5 +182,34 @@ public class RegulateObjectBean implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    private static final long serialVersionUID = 1L;
+
+    @Generated(hash = 876620219)
+    public RegulateObjectBean(long id, String name, String nature, String code,
+                              String unifiedCode, String belongedTrade, String address,
+                              double longitude, double latitude, String contactPhone,
+                              String inspcount, String entcredit, String passrate, String entregion,
+                              int status) {
+        this.id = id;
+        this.name = name;
+        this.nature = nature;
+        this.code = code;
+        this.unifiedCode = unifiedCode;
+        this.belongedTrade = belongedTrade;
+        this.address = address;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.contactPhone = contactPhone;
+        this.inspcount = inspcount;
+        this.entcredit = entcredit;
+        this.passrate = passrate;
+        this.entregion = entregion;
+        this.status = status;
+    }
+
+    @Generated(hash = 1562055225)
+    public RegulateObjectBean() {
     }
 }

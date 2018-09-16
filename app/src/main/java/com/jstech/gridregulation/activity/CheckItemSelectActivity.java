@@ -12,13 +12,18 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.jstech.gridregulation.ConstantValue;
+import com.jstech.gridregulation.MyApplication;
 import com.jstech.gridregulation.R;
 import com.jstech.gridregulation.adapter.CheckItemSelectAdapter;
+import com.jstech.gridregulation.api.AddTaskApi;
 import com.jstech.gridregulation.api.GetItemApi;
 import com.jstech.gridregulation.api.MyUrl;
 import com.jstech.gridregulation.base.BaseActivity;
+import com.jstech.gridregulation.bean.AddTaskBean;
 import com.jstech.gridregulation.bean.CheckItemBean;
 import com.jstech.gridregulation.bean.CheckTableBean;
+import com.jstech.gridregulation.bean.RegulateObjectBean;
+import com.jstech.gridregulation.db.RegulateObjectBeanDao;
 import com.jstech.gridregulation.utils.LogUtils;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.exception.ApiException;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.http.HttpManager;
@@ -48,9 +53,9 @@ public class CheckItemSelectActivity extends BaseActivity implements
 
     HttpManager manager;
     GetItemApi getItemApi;
-
+    AddTaskApi addTaskApi;
     String tableId;
-
+    RegulateObjectBean objectBean;
 
     @Override
     protected int getLayoutId() {
@@ -62,7 +67,8 @@ public class CheckItemSelectActivity extends BaseActivity implements
 
     @Override
     public void initView() {
-        tableId = getIntent().getStringExtra("tableId");
+        tableId = getIntent().getExtras().getString(ConstantValue.KEY_TABLE_ID);
+        objectBean = (RegulateObjectBean) getIntent().getExtras().getSerializable(ConstantValue.KEY_OBJECT_BEAN);
 //        initList();
         mAdapter = new CheckItemSelectAdapter(mCheckItemBeanList, this, R.layout.item_check_table_select, this);
         rvTable.setLayoutManager(new LinearLayoutManager(this));
@@ -72,6 +78,7 @@ public class CheckItemSelectActivity extends BaseActivity implements
         manager = new HttpManager(this, this);
         getItemApi = new GetItemApi();
         getItemApi.setParam(tableId);
+        addTaskApi = new AddTaskApi();
         manager.doHttpDeal(getItemApi);
     }
 
@@ -127,11 +134,9 @@ public class CheckItemSelectActivity extends BaseActivity implements
                     Toast.makeText(this, "请选择检查项目", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Intent intent = new Intent(this, SiteCheckActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("list", mSelectedList);
-                intent.putExtras(bundle);
-                startActivity(intent);
+
+                //增加检查任务
+                addTask();
                 break;
             //全部选中
             case R.id.ckb_all_select:
@@ -140,6 +145,25 @@ public class CheckItemSelectActivity extends BaseActivity implements
             default:
                 break;
         }
+    }
+
+    /**
+     * 向服务器请求，新增一个检查任务
+     */
+    private void addTask() {
+        MyApplication app = (MyApplication) getApplication();
+        AddTaskBean addTaskBean = new AddTaskBean();
+        addTaskBean.setEntid(objectBean.getId());
+        addTaskBean.setOisuper(app.getUserBean().getUserId());
+        addTaskBean.setEntcredit(objectBean.getEntcredit());
+        addTaskBean.setEntregion(objectBean.getEntregion());
+        addTaskBean.setEnttype(objectBean.getNature());
+        addTaskBean.setInsptable(tableId);
+        addTaskBean.setEntname(objectBean.getName());
+        addTaskBean.setUpdateBy(app.getUserBean().getUserId());
+        addTaskBean.setCreateBy(app.getUserBean().getUserId());
+        addTaskApi.setParams(addTaskBean);
+        manager.doHttpDeal(addTaskApi);
     }
 
     private void selectAll() {
@@ -171,10 +195,17 @@ public class CheckItemSelectActivity extends BaseActivity implements
             if ("200".equals(code)) {
                 mCheckItemBeanList.clear();
                 mCheckItemBeanList.addAll((ArrayList<CheckItemBean>) o.getJSONArray(ConstantValue.RESULT).toJavaList(CheckItemBean.class));
-//                addOverLay();
                 mAdapter.notifyDataSetChanged();
                 LogUtils.d(mCheckItemBeanList.size() + "");
             }
+        } else if (method.equals(addTaskApi.getMethod())) {
+            Intent intent = new Intent(this, SiteCheckActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("list", mSelectedList);
+            LogUtils.d("taskId =" + o.getString("result"));
+            bundle.putString("taskId", o.getString("result"));
+            intent.putExtras(bundle);
+            startActivity(intent);
         }
     }
 

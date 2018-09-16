@@ -1,6 +1,7 @@
 package com.jstech.gridregulation.http;
 
 import com.jstech.gridregulation.api.MyUrl;
+import com.jstech.gridregulation.bean.AddTaskBean;
 
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -13,10 +14,19 @@ import rx.Observable;
 
 public interface HttpPostService {
 
-//    @HTTP(method = "POST", path = MyUrl.ENTERPRISE + "{id}" )
+    //    @HTTP(method = "POST", path = MyUrl.ENTERPRISE + "{id}" )
     @POST
-    Observable<String> getEnterprise(@Url String url);
+    Observable<String> getEnterprise(@Url String url);//获取监管对象
 
     @POST
-    Observable<String> getTable(@Url String url);
+    Observable<String> getTable(@Url String url);//获取检查表
+
+    @POST
+    Observable<String> getItem(@Url String url);//获取检查项目
+
+    @POST(MyUrl.ADD_TASK)
+    @FormUrlEncoded
+    Observable<String> addTask(@Body AddTaskBean params);
+//    @POST
+//    Observable<String> getTable(@Url String url);
 }

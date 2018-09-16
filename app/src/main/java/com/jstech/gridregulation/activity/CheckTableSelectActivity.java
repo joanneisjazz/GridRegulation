@@ -11,12 +11,14 @@ import android.widget.CheckBox;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.jstech.gridregulation.ConstantValue;
+import com.jstech.gridregulation.MyApplication;
 import com.jstech.gridregulation.R;
 import com.jstech.gridregulation.adapter.CheckTableSelectAdapter;
 import com.jstech.gridregulation.api.GetTableApi;
 import com.jstech.gridregulation.api.MyUrl;
 import com.jstech.gridregulation.base.BaseActivity;
 import com.jstech.gridregulation.bean.CheckTableBean;
+import com.jstech.gridregulation.bean.RegulateObjectBean;
 import com.jstech.gridregulation.utils.LogUtils;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.exception.ApiException;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.http.HttpManager;
@@ -45,6 +47,9 @@ public class CheckTableSelectActivity extends BaseActivity implements CheckTable
     HttpManager manager;
     GetTableApi getTableApi;
 
+    long objectId;
+    MyApplication app = (MyApplication) getApplication();
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_check_table_select;
@@ -52,6 +57,7 @@ public class CheckTableSelectActivity extends BaseActivity implements CheckTable
 
     @Override
     public void initView() {
+        objectId = getIntent().getLongExtra(ConstantValue.KEY_OBJECT_ID, 0);
 
         LogUtils.d("" + mCheckTableBeanList.size());
         mAdapter = new CheckTableSelectAdapter(mCheckTableBeanList, this, R.layout.item_check_table_select, this);
@@ -124,7 +130,8 @@ public class CheckTableSelectActivity extends BaseActivity implements CheckTable
                 tableId = tableId.substring(1, tableId.length());
                 LogUtils.d(tableId);
                 Intent intent = new Intent(this, CheckItemSelectActivity.class);
-                intent.putExtra("tableId", tableId);
+                intent.putExtra(ConstantValue.KEY_OBJECT_ID, objectId);
+                intent.putExtra(ConstantValue.KEY_TABLE_ID, tableId);
                 startActivity(intent);
                 break;
             //全部选中

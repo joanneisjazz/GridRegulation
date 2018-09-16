@@ -6,9 +6,12 @@ package com.jstech.gridregulation.api;
 public class MyUrl {
 
     //grid/api/ta/supervi/get/enterprise/list/
-    public final static String SUPERVI = "grid/api/ta/supervi/get/";//现场检查的接口
-    public final static String GET_ENTERPRISE = SUPERVI + "enterprise/list/";//获取监管对象的信息
-    public final static String GET_TABLE = SUPERVI + "norm/table/list/";
-    public final static String GET_ITEM = SUPERVI + "norm/item/list/";
+    public final static String SUPERVI = "grid/api/ta/supervi/";//现场检查的接口
+    public final static String SUPERVI_GET = SUPERVI + "get/";
+    public final static String GET_ENTERPRISE = SUPERVI_GET + "enterprise/list/";//获取监管对象的信息
+    public final static String GET_TABLE = SUPERVI_GET + "norm/table/list/";//获取检查表
+    public final static String GET_ITEM = SUPERVI_GET + "norm/item/list/";//获取检查项目
+    public final static String SUPERVI_SAVE = SUPERVI + "save/";
+    public final static String ADD_TASK = SUPERVI_SAVE + "supervi/insp";//增加检查任务
 
 }

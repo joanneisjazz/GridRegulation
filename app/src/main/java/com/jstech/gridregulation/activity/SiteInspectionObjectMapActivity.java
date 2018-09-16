@@ -27,11 +27,13 @@ import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.jstech.gridregulation.ConstantValue;
+import com.jstech.gridregulation.MyApplication;
 import com.jstech.gridregulation.R;
 import com.jstech.gridregulation.api.GetObjectApi;
 import com.jstech.gridregulation.api.MyUrl;
 import com.jstech.gridregulation.base.BaseActivity;
 import com.jstech.gridregulation.bean.RegulateObjectBean;
+import com.jstech.gridregulation.db.RegulateObjectBeanDao;
 import com.jstech.gridregulation.utils.LogUtils;
 import com.jstech.gridregulation.utils.SystemUtil;
 import com.jstech.gridregulation.widget.MapBottomWindow;
@@ -71,6 +73,8 @@ public class SiteInspectionObjectMapActivity extends BaseActivity implements
     MapBottomWindow window;
     HttpManager manager;
     GetObjectApi getObjectApi;
+
+    boolean isSaveData = false;
 
     @Override
     protected int getLayoutId() {
@@ -216,12 +220,16 @@ public class SiteInspectionObjectMapActivity extends BaseActivity implements
         return true;
     }
 
+    /**
+     * 跳转的方法
+     * 如果是开启新的检查，跳转到选择检查表的页面
+     * 如果是继续检查，跳转到判定检查结果的页面
+     */
     @Override
     public void task(RegulateObjectBean objectBean) {
         Intent intent = new Intent();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("data", objectBean);
         if (objectBean.getStatus() == ConstantValue.OBJ_CHECK_STATUS_NEW) {
+            intent.putExtra(ConstantValue.KEY_OBJECT_ID,objectBean.getId());
             intent.setClass(this, CheckTableSelectActivity.class);
         } else {
             intent.setClass(this, CheckItemSelectActivity.class);
@@ -242,6 +250,18 @@ public class SiteInspectionObjectMapActivity extends BaseActivity implements
                 LogUtils.d(mRegulateObjectArrayList.size() + "");
             }
         }
+
+        //开一个新线程保存数据到本地
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                isSaveData = true;
+                MyApplication app = (MyApplication) getApplication();
+                RegulateObjectBeanDao dao = app.getSession().getRegulateObjectBeanDao();
+                dao.insertOrReplaceInTx(mRegulateObjectArrayList);
+                isSaveData = false;
+            }
+        }).start();
     }
 
     @Override
