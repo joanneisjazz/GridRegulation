@@ -1,5 +1,8 @@
 package com.jstech.gridregulation.bean;
 
+/**
+ * 增加检查任务接口里上传的信息
+ */
 public class AddTaskBean {
 
     /**

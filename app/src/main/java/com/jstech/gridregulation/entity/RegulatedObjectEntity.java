@@ -1,25 +1,15 @@
-package com.jstech.gridregulation.bean;
+package com.jstech.gridregulation.entity;
 
-import com.baidu.mapapi.map.Marker;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.annotation.NotNull;
-import org.greenrobot.greendao.annotation.Transient;
 
 import java.io.Serializable;
-
 import org.greenrobot.greendao.annotation.Generated;
 
-/**
- * 监管对象的实体类
- */
 @Entity
-public class RegulateObjectBean implements Serializable {
+public class RegulatedObjectEntity implements Serializable {
 
-
-    @Transient
-    private Marker marker;
     /**
      * id : 2
      * name : 测试数据
@@ -36,9 +26,10 @@ public class RegulateObjectBean implements Serializable {
      * passrate :
      * entregion : 140110001
      */
+    private static final long serialVersionUID = 1L;
 
     @Id
-    private Long id;
+    private long id;
     private String name;
     private String nature;
     private String code;
@@ -55,6 +46,33 @@ public class RegulateObjectBean implements Serializable {
 
     private int status;
 
+    @Generated(hash = 1288923995)
+    public RegulatedObjectEntity(long id, String name, String nature, String code,
+            String unifiedCode, String belongedTrade, String address,
+            double longitude, double latitude, String contactPhone,
+            String inspcount, String entcredit, String passrate, String entregion,
+            int status) {
+        this.id = id;
+        this.name = name;
+        this.nature = nature;
+        this.code = code;
+        this.unifiedCode = unifiedCode;
+        this.belongedTrade = belongedTrade;
+        this.address = address;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.contactPhone = contactPhone;
+        this.inspcount = inspcount;
+        this.entcredit = entcredit;
+        this.passrate = passrate;
+        this.entregion = entregion;
+        this.status = status;
+    }
+
+    @Generated(hash = 824638333)
+    public RegulatedObjectEntity() {
+    }
+
     public int getStatus() {
         return status;
     }
@@ -62,15 +80,6 @@ public class RegulateObjectBean implements Serializable {
     public void setStatus(int status) {
         this.status = status;
     }
-
-    public Marker getMarker() {
-        return marker;
-    }
-
-    public void setMarker(Marker marker) {
-        this.marker = marker;
-    }
-
 
     public String getNature() {
         return nature;
@@ -168,11 +177,11 @@ public class RegulateObjectBean implements Serializable {
         this.entregion = entregion;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -184,32 +193,4 @@ public class RegulateObjectBean implements Serializable {
         this.name = name;
     }
 
-    private static final long serialVersionUID = 1L;
-
-    @Generated(hash = 929133548)
-    public RegulateObjectBean(Long id, String name, String nature, String code,
-                              String unifiedCode, String belongedTrade, String address,
-                              double longitude, double latitude, String contactPhone,
-                              String inspcount, String entcredit, String passrate, String entregion,
-                              int status) {
-        this.id = id;
-        this.name = name;
-        this.nature = nature;
-        this.code = code;
-        this.unifiedCode = unifiedCode;
-        this.belongedTrade = belongedTrade;
-        this.address = address;
-        this.longitude = longitude;
-        this.latitude = latitude;
-        this.contactPhone = contactPhone;
-        this.inspcount = inspcount;
-        this.entcredit = entcredit;
-        this.passrate = passrate;
-        this.entregion = entregion;
-        this.status = status;
-    }
-
-    @Generated(hash = 1562055225)
-    public RegulateObjectBean() {
-    }
 }

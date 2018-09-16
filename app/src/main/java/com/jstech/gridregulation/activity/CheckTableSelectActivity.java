@@ -58,8 +58,6 @@ public class CheckTableSelectActivity extends BaseActivity implements CheckTable
     @Override
     public void initView() {
         objectId = getIntent().getLongExtra(ConstantValue.KEY_OBJECT_ID, 0);
-
-        LogUtils.d("" + mCheckTableBeanList.size());
         mAdapter = new CheckTableSelectAdapter(mCheckTableBeanList, this, R.layout.item_check_table_select, this);
         rvTable.setLayoutManager(new LinearLayoutManager(this));
         rvTable.setAdapter(mAdapter);

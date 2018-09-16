@@ -13,5 +13,5 @@ public class MyUrl {
     public final static String GET_ITEM = SUPERVI_GET + "norm/item/list/";//获取检查项目
     public final static String SUPERVI_SAVE = SUPERVI + "save/";
     public final static String ADD_TASK = SUPERVI_SAVE + "supervi/insp";//增加检查任务
-
+    public final static String SAVE_ITEMS = SUPERVI_SAVE + "supervi/items";//保存检查项及结果
 }

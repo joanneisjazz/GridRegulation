@@ -1,6 +1,7 @@
 package com.jstech.gridregulation.activity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,8 +31,11 @@ import com.wzgiceman.rxretrofitlibrary.retrofit_rx.http.HttpManager;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.HttpOnNextListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
+import rx.Observable;
+import rx.Subscriber;
 
 /**
  * 选择检查项目
@@ -54,8 +58,11 @@ public class CheckItemSelectActivity extends BaseActivity implements
     HttpManager manager;
     GetItemApi getItemApi;
     AddTaskApi addTaskApi;
-    String tableId;
+    String tableId = "";
+    Long objectId;
     RegulateObjectBean objectBean;
+    String taskId = "";
+    MyApplication application;
 
     @Override
     protected int getLayoutId() {
@@ -67,8 +74,10 @@ public class CheckItemSelectActivity extends BaseActivity implements
 
     @Override
     public void initView() {
+        application = (MyApplication) getApplication();
+        objectId = getIntent().getLongExtra(ConstantValue.KEY_OBJECT_ID, -1);
         tableId = getIntent().getExtras().getString(ConstantValue.KEY_TABLE_ID);
-        objectBean = (RegulateObjectBean) getIntent().getExtras().getSerializable(ConstantValue.KEY_OBJECT_BEAN);
+        objectBean = application.getSession().getRegulateObjectBeanDao().load(objectId);
 //        initList();
         mAdapter = new CheckItemSelectAdapter(mCheckItemBeanList, this, R.layout.item_check_table_select, this);
         rvTable.setLayoutManager(new LinearLayoutManager(this));
@@ -199,11 +208,13 @@ public class CheckItemSelectActivity extends BaseActivity implements
                 LogUtils.d(mCheckItemBeanList.size() + "");
             }
         } else if (method.equals(addTaskApi.getMethod())) {
+            taskId = o.getString(ConstantValue.RESULT);
+            //保存任务和选中的检查表检查项
             Intent intent = new Intent(this, SiteCheckActivity.class);
             Bundle bundle = new Bundle();
             bundle.putSerializable("list", mSelectedList);
             LogUtils.d("taskId =" + o.getString("result"));
-            bundle.putString("taskId", o.getString("result"));
+            bundle.putString(ConstantValue.KEY_TASK_ID, o.getString("result"));
             intent.putExtras(bundle);
             startActivity(intent);
         }
@@ -212,5 +223,23 @@ public class CheckItemSelectActivity extends BaseActivity implements
     @Override
     public void onError(ApiException e, String method) {
 
+    }
+
+    public class SaveDataAscyn extends AsyncTask<List<CheckItemBean>, Integer, Boolean> {
+
+        @Override
+        protected void onPreExecute() {
+            LogUtils.d("正在保存数据");
+        }
+
+        @Override
+        protected void onPostExecute(Boolean s) {
+            super.onPostExecute(s);
+        }
+
+        @Override
+        protected Boolean doInBackground(List<CheckItemBean>... lists) {
+            return null;
+        }
     }
 }

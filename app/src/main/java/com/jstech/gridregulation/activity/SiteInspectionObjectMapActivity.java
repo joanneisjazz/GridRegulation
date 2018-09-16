@@ -229,7 +229,7 @@ public class SiteInspectionObjectMapActivity extends BaseActivity implements
     public void task(RegulateObjectBean objectBean) {
         Intent intent = new Intent();
         if (objectBean.getStatus() == ConstantValue.OBJ_CHECK_STATUS_NEW) {
-            intent.putExtra(ConstantValue.KEY_OBJECT_ID,objectBean.getId());
+            intent.putExtra(ConstantValue.KEY_OBJECT_ID, objectBean.getId());
             intent.setClass(this, CheckTableSelectActivity.class);
         } else {
             intent.setClass(this, CheckItemSelectActivity.class);

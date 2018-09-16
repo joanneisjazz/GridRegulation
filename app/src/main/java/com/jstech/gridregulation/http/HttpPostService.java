@@ -2,6 +2,9 @@ package com.jstech.gridregulation.http;
 
 import com.jstech.gridregulation.api.MyUrl;
 import com.jstech.gridregulation.bean.AddTaskBean;
+import com.jstech.gridregulation.bean.RegulateResultBean;
+
+import java.util.List;
 
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -25,8 +28,8 @@ public interface HttpPostService {
     Observable<String> getItem(@Url String url);//获取检查项目
 
     @POST(MyUrl.ADD_TASK)
-    @FormUrlEncoded
     Observable<String> addTask(@Body AddTaskBean params);
-//    @POST
-//    Observable<String> getTable(@Url String url);
+
+    @POST(MyUrl.SAVE_ITEMS)
+    Observable<String> saveItemResult(@Body List<RegulateResultBean> params);
 }
