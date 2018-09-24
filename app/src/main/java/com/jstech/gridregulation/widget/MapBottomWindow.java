@@ -67,6 +67,12 @@ public class MapBottomWindow {
 
     }
 
+    public void dismiss() {
+        if (null != mPopupWindow && mPopupWindow.isShowing()) {
+            mPopupWindow.dismiss();
+        }
+    }
+
     /**
      * 设置点击事件
      *

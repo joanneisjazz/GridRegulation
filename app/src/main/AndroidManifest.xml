@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
 
     <application
         android:name=".MyApplication"
@@ -24,9 +25,9 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="cqhKN4gSqY5C4YdT1oDtozzOGh1A4trq"></meta-data>
+            android:value="3aZgNqY7qD4jMYf033WalLvMuTOMdo3O"></meta-data>
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,7 +37,13 @@
         <activity
             android:name=".activity.SiteInspectionObjectMapActivity"
             android:label="现场检查地图页面"></activity>
+        <activity
+            android:name=".activity.SearchRegulateObjectActivity"
+            android:label="搜索企业"></activity>
 
+        <activity
+            android:name=".activity.CheckTableSelect2Activity"
+            android:label="选择检查内容"></activity>
         <activity
             android:name=".activity.CheckTableSelectActivity"
             android:label="选择检查表"></activity>
@@ -50,6 +57,13 @@
         <activity
             android:name=".activity.CheckMethodActivity"
             android:label="查看检查方法"></activity>
+
+        <activity
+            android:name=".activity.SiteCheckUploadActivity"
+            android:label="检查结果"></activity>
+        <activity
+            android:name=".activity.SignatureActivity"
+            android:label="签名"></activity>
 
         <service
             android:name="com.baidu.location.f"

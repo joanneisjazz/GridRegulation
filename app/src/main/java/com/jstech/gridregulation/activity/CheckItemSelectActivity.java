@@ -79,7 +79,7 @@ public class CheckItemSelectActivity extends BaseActivity implements
         tableId = getIntent().getExtras().getString(ConstantValue.KEY_TABLE_ID);
         objectBean = application.getSession().getRegulateObjectBeanDao().load(objectId);
 //        initList();
-        mAdapter = new CheckItemSelectAdapter(mCheckItemBeanList, this, R.layout.item_check_table_select, this);
+        mAdapter = new CheckItemSelectAdapter(mCheckItemBeanList, this, R.layout.item_check_item_select, this);
         rvTable.setLayoutManager(new LinearLayoutManager(this));
         rvTable.setAdapter(mAdapter);
         ckbAllSelect.setOnClickListener(this);

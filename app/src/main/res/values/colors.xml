@@ -6,7 +6,18 @@
     <color name="white">#FFFFFF</color>
     <color name="immersion">#FF18B4ED</color>
 
-    <color name="background">#F5F5F9</color>
+    <color name="check_table_name">#333333</color>
+    <color name="check_item_name">#ff666666</color>
+    <color name="check_item_unselect_bg">#CCCCCC</color>
+    <color name="check_item_selected_bg">#65C15C</color>
+    <color name="check_item_select_text">#FFFFFF</color>
+
+    <color name="bottom_nagivation_text_selected">#CCCCCC</color>
+    <color name="bottom_nagivation_text_unselect">#65C15C</color>
+
+
+    <color name="btn_green">#65C15C</color>
+    <color name="background">#f0f2ef</color>
     <color name="text_bottom_normal">#8E9098</color>
     <color name="text_bottom_press">#113C78</color>
     <color name="text_service_normal">#929292</color>

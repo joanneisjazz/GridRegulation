@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -57,6 +58,7 @@ public class CheckTableSelectActivity extends BaseActivity implements CheckTable
 
     @Override
     public void initView() {
+        setToolSubBarTitle("");
         objectId = getIntent().getLongExtra(ConstantValue.KEY_OBJECT_ID, 0);
         mAdapter = new CheckTableSelectAdapter(mCheckTableBeanList, this, R.layout.item_check_table_select, this);
         rvTable.setLayoutManager(new LinearLayoutManager(this));
@@ -121,6 +123,10 @@ public class CheckTableSelectActivity extends BaseActivity implements CheckTable
         switch (v.getId()) {
             //保存
             case R.id.btn_save:
+                if (mSelectedList.size() == 0) {
+                    Toast.makeText(this, "请选择检查表", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 for (CheckTableBean b : mSelectedList) {
                     tableId = tableId + "," + b.getId();
                 }

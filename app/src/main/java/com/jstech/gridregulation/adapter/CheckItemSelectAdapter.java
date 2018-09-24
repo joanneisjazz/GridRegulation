@@ -28,8 +28,11 @@ public class CheckItemSelectAdapter extends BaseRecyclerAdapter<CheckItemBean> {
     @Override
     protected void bindItemData(ViewHolder viewHolder, final CheckItemBean data, final int position) {
         TextView tvContent = viewHolder.getView(R.id.tv_content);
+        TextView tvTableName = viewHolder.getView(R.id.tv_content);
+
         final CheckBox ckbSelect = viewHolder.getView(R.id.ckb_select);
         tvContent.setText(data.getContent());
+        tvTableName.setText(data.getTableid());
         ckbSelect.setChecked(data.isSelected());
         ckbSelect.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,7 +52,7 @@ public class CheckItemSelectAdapter extends BaseRecyclerAdapter<CheckItemBean> {
         /**
          * checkbox状态改变触发的事件
          *
-         * @param position   检查表的位置
+         * @param position 检查表的位置
          * @param
          */
         void select(int position);

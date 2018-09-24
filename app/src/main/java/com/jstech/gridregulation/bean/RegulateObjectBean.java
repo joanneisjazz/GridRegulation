@@ -1,6 +1,7 @@
 package com.jstech.gridregulation.bean;
 
 import com.baidu.mapapi.map.Marker;
+import com.jstech.gridregulation.MyApplication;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
@@ -54,6 +55,19 @@ public class RegulateObjectBean implements Serializable {
     private String entregion;
 
     private int status;
+
+    private String userId = MyApplication.getInstance().getUserBean().getUserId();
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    private String isSearched;
+    
 
     public int getStatus() {
         return status;
@@ -184,14 +198,21 @@ public class RegulateObjectBean implements Serializable {
         this.name = name;
     }
 
+    public String getIsSearched() {
+        return this.isSearched;
+    }
+
+    public void setIsSearched(String isSearched) {
+        this.isSearched = isSearched;
+    }
+
     private static final long serialVersionUID = 1L;
 
-    @Generated(hash = 929133548)
-    public RegulateObjectBean(Long id, String name, String nature, String code,
-                              String unifiedCode, String belongedTrade, String address,
-                              double longitude, double latitude, String contactPhone,
-                              String inspcount, String entcredit, String passrate, String entregion,
-                              int status) {
+    @Generated(hash = 661705215)
+    public RegulateObjectBean(Long id, String name, String nature, String code, String unifiedCode,
+            String belongedTrade, String address, double longitude, double latitude,
+            String contactPhone, String inspcount, String entcredit, String passrate, String entregion,
+            int status, String userId, String isSearched) {
         this.id = id;
         this.name = name;
         this.nature = nature;
@@ -207,6 +228,8 @@ public class RegulateObjectBean implements Serializable {
         this.passrate = passrate;
         this.entregion = entregion;
         this.status = status;
+        this.userId = userId;
+        this.isSearched = isSearched;
     }
 
     @Generated(hash = 1562055225)

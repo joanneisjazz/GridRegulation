@@ -24,5 +24,10 @@ public class ConstantValue {
     final public static String KEY_TABLE_ID = "KEY_TABLE_ID";
     final public static String KEY_TASK_ID = "KEY_TASK_ID";
 
+    final public static String PATH_SIGN_PICTURE = "GRID_REGULATE/PICTURE";
+
+    final public static String CODE_SUCCESS = "200";//成功的返回码
+
+
 
 }

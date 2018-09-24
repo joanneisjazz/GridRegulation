@@ -18,7 +18,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:background="@mipmap/work_head_normal_picture"
+            android:background="@mipmap/ic_title_background"
             android:orientation="vertical">
 
             <TextView
@@ -47,21 +47,26 @@
             <Button
                 android:id="@+id/btn_unpass"
                 android:layout_width="0dp"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:text="不通过" />
+                android:background="@drawable/bg_check_item_result_unselect"
+                android:text="@string/cancel"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
 
             <Button
                 android:id="@+id/btn_pass"
                 android:layout_width="0dp"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
-                android:text="通过"
-                android:textColor="@color/white" />
+                android:background="@drawable/bg_check_item_result_selected"
+                android:text="@string/confrim"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
         </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

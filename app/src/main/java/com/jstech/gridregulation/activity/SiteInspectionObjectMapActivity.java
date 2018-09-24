@@ -119,7 +119,7 @@ public class SiteInspectionObjectMapActivity extends BaseActivity implements
                 .setOutSideCancel(true)
                 .setFouse(true)
                 .setwidth(SystemUtil.getWith(this))
-                .setheight(SystemUtil.getHeight(this) * 2 / 5)
+                .setheight(SystemUtil.getHeight(this) * 2 / 7)
                 .setListener(this)
                 .builder();
     }
@@ -135,9 +135,9 @@ public class SiteInspectionObjectMapActivity extends BaseActivity implements
         for (RegulateObjectBean o : mRegulateObjectArrayList) {
             LatLng ll = new LatLng(o.getLatitude(), o.getLongitude());
             if ("0".equals(o.getNature())) {//生产经营主体
-                markerIcon = R.drawable.icon_marka;
+                markerIcon = R.mipmap.ic_operating_entity_marker;
             } else {//农资门店
-                markerIcon = R.drawable.icon_markb;
+                markerIcon = R.mipmap.ic_farm_capital_store_marker;
             }
             MarkerOptions markerOption = new MarkerOptions().position(ll).icon(BitmapDescriptorFactory.fromResource(markerIcon)).
                     zIndex(ConstantValue.Z_INDEX).animateType(MarkerOptions.MarkerAnimateType.drop);
@@ -173,6 +173,7 @@ public class SiteInspectionObjectMapActivity extends BaseActivity implements
     @Override
     protected void onPause() {
         mMapView.onPause();
+        window.dismiss();
         super.onPause();
     }
 
@@ -201,11 +202,11 @@ public class SiteInspectionObjectMapActivity extends BaseActivity implements
         for (RegulateObjectBean o : mRegulateObjectArrayList) {
             if (marker == o.getMarker()) {
                 window.setObj(o);
-                window.getTvAddress().setText(o.getAddress());
-                window.getTvDetails().setText(o.getBelongedTrade());
+                window.getTvAddress().setText("详细地址：" + o.getAddress());
+                window.getTvDetails().setText("检查次数：" + o.getInspcount() + " | " + "检查合格率：" + o.getPassrate());
                 window.getTvDistance().setText("300m");
                 window.getTvObjectName().setText(o.getName());
-                window.getTvTel().setText(o.getContactPhone());
+                window.getTvTel().setText("联系电话：" + o.getContactPhone());
                 if (o.getStatus() == ConstantValue.OBJ_CHECK_STATUS_NEW) {
                     staus = "开启新的检查";
                 } else {
@@ -219,6 +220,7 @@ public class SiteInspectionObjectMapActivity extends BaseActivity implements
         }
         return true;
     }
+
 
     /**
      * 跳转的方法

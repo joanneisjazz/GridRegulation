@@ -47,6 +47,13 @@ public class MyPopupWindow {
         unpassButton.setOnClickListener(null);
         if (null != unpassButton && null != listener) {
             unpassButton.setOnClickListener(listener);
+        }else {
+            unpassButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dismiss();
+                }
+            });
         }
     }
 

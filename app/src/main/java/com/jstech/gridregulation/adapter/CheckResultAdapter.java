@@ -42,7 +42,7 @@ public class CheckResultAdapter extends BaseRecyclerAdapter<CheckItemBean> {
             @Override
             public void onClick(View v) {
                 if (null != listener) {
-                    listener.showMethod(data.getId());
+                    listener.showMethod(data.getMethod());
                 }
             }
         });
@@ -53,7 +53,7 @@ public class CheckResultAdapter extends BaseRecyclerAdapter<CheckItemBean> {
             public void onClick(View v) {
                 setSelectStyle(tvQualified, tvBasicQualified, tvUnqualified);
                 tvUnqualifiedReason.setVisibility(View.GONE);
-                listener.selectResult(0,data, viewHolder);
+                listener.selectResult(0, data, viewHolder);
 
             }
         });
@@ -64,7 +64,7 @@ public class CheckResultAdapter extends BaseRecyclerAdapter<CheckItemBean> {
             public void onClick(View v) {
                 setSelectStyle(tvBasicQualified, tvQualified, tvUnqualified);
                 tvUnqualifiedReason.setVisibility(View.GONE);
-                listener.selectResult(1,data, viewHolder);
+                listener.selectResult(1, data, viewHolder);
 
             }
         });
@@ -76,7 +76,7 @@ public class CheckResultAdapter extends BaseRecyclerAdapter<CheckItemBean> {
                 data.setResult("3");
                 setSelectStyle(tvUnqualified, tvQualified, tvBasicQualified);
 //                tvUnqualifiedReason.setVisibility(View.VISIBLE);
-                listener.selectResult(2,data, viewHolder);
+                listener.selectResult(2, data, viewHolder);
             }
         });
     }
@@ -91,11 +91,15 @@ public class CheckResultAdapter extends BaseRecyclerAdapter<CheckItemBean> {
      * 设置选中和未选中的样式
      */
     private void setSelectStyle(TextView tvSeleted, TextView tvUnSeleted1, TextView tvSeleted2) {
-        tvSeleted.setTextColor(mContext.getResources().getColor(R.color.white));
-        tvSeleted.setBackgroundColor(mContext.getResources().getColor(R.color.colorPrimaryDark));
-        tvUnSeleted1.setTextColor(mContext.getResources().getColor(R.color.appTextGray));
-        tvUnSeleted1.setBackgroundColor(mContext.getResources().getColor(R.color.white));
-        tvSeleted2.setTextColor(mContext.getResources().getColor(R.color.appTextGray));
-        tvSeleted2.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+//        tvSeleted.setTextColor(mContext.getResources().getColor(R.color.white));
+//        tvSeleted.setBackgroundColor(mContext.getResources().getColor(R.color.colorPrimaryDark));
+        tvSeleted.setBackground(mContext.getResources().getDrawable(R.drawable.bg_check_item_result_selected));
+        tvUnSeleted1.setBackground(mContext.getResources().getDrawable(R.drawable.bg_check_item_result_unselect));
+        tvSeleted2.setBackground(mContext.getResources().getDrawable(R.drawable.bg_check_item_result_unselect));
+
+//        tvUnSeleted1.setTextColor(mContext.getResources().getColor(R.color.appTextGray));
+//        tvUnSeleted1.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+//        tvSeleted2.setTextColor(mContext.getResources().getColor(R.color.appTextGray));
+//        tvSeleted2.setBackgroundColor(mContext.getResources().getColor(R.color.white));
     }
 }

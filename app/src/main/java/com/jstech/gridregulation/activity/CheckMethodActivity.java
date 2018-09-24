@@ -10,12 +10,12 @@ import butterknife.BindView;
 /**
  * 查看检查方法
  */
-public class CheckMethodActivity extends BaseActivity  {
+public class CheckMethodActivity extends BaseActivity {
 
     @BindView(R.id.tv_method)
     TextView tvMethod;
 
-    String objId;
+    String strMethod;
 
 
     @Override
@@ -25,7 +25,13 @@ public class CheckMethodActivity extends BaseActivity  {
 
     @Override
     public void initView() {
-
+        setToolSubBarTitle("");
+        strMethod = getIntent().getStringExtra("method");
+        tvMethod.setText(strMethod);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }

@@ -1,61 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="5dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginTop="5dp"
+    android:background="@drawable/bg_site_check_table_item"
+    android:orientation="vertical"
+    android:padding="10dp">
 
     <TextView
         android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        style="@style/check_table_name"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="15dp"
+        android:gravity="center_vertical"
         android:text="表1" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="15dp"
+        android:background="@color/line_divider"></View>
 
     <TextView
         android:id="@+id/tv_content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_title"
-        android:layout_centerVertical="true"
+        style="@style/check_item_name"
         android:layout_marginLeft="15dp"
-        android:layout_toRightOf="@+id/ckb_select"
         android:text="检查项1" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/line_divider"></View>
+
     <LinearLayout
-        android:id="@+id/lauout_line_3"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_below="@+id/tv_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/layout_result"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:gravity="center_vertical">
 
             <TextView
                 android:id="@+id/tv_qualified"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
+                style="@style/check_item_result"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="2"
                 android:text="@string/qualified" />
 
             <TextView
                 android:id="@+id/tv_basic_qualified"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
+
+                style="@style/check_item_result"
+                android:layout_weight="4"
                 android:text="@string/basic_qualified" />
 
             <TextView
                 android:id="@+id/tv_unqualified"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
+                style="@style/check_item_result"
+                android:layout_weight="3"
                 android:text="@string/unqualified" />
         </LinearLayout>
 
@@ -63,19 +78,23 @@
             android:id="@+id/tv_method"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
             android:autoLink="all"
-            android:text="@string/check_method" />
+            android:text="@string/check_method"
+            android:textColor="#65C15C"
+            android:textSize="16sp" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/tv_unqualified_reason"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/lauout_line_3"
+        android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp"
         android:text="不合格"
         android:textColor="@color/red"
-        android:visibility="invisible" />
+        android:visibility="gone" />
 
 
-</RelativeLayout>
+</LinearLayout>

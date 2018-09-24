@@ -99,7 +99,7 @@ public class SiteCheckActivity extends BaseActivity implements
     @Override
     public void showMethod(String id) {
         Intent intent = new Intent(this, CheckMethodActivity.class);
-        intent.putExtra("id", id);
+        intent.putExtra("method", id);
         startActivity(intent);
     }
 
@@ -150,6 +150,8 @@ public class SiteCheckActivity extends BaseActivity implements
         }
         if (isAllChecked()) {
             tvNext.setVisibility(View.VISIBLE);
+        } else {
+            tvNext.setVisibility(View.GONE);
         }
 
     }
@@ -214,6 +216,7 @@ public class SiteCheckActivity extends BaseActivity implements
         String code = o.getString(ConstantValue.CODE);
         if ("200".equals(code)) {
             if (method.equals(saveItemResultApi.getMethod())) {
+                startActivity(new Intent(this, SiteCheckUploadActivity.class));
                 LogUtils.d(resulte);
             }
         }

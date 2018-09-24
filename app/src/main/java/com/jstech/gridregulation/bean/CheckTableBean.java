@@ -1,6 +1,7 @@
 package com.jstech.gridregulation.bean;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class CheckTableBean implements Serializable {
 
@@ -16,6 +17,16 @@ public class CheckTableBean implements Serializable {
     private int num;
     private String type;
     private boolean isSelected;
+
+    private List<CheckItemBean> checkItemBeans;
+
+    public List<CheckItemBean> getCheckItemBeans() {
+        return checkItemBeans;
+    }
+
+    public void setCheckItemBeans(List<CheckItemBean> checkItemBeans) {
+        this.checkItemBeans = checkItemBeans;
+    }
 
     public boolean isSelected() {
         return isSelected;
@@ -56,4 +67,5 @@ public class CheckTableBean implements Serializable {
     public void setType(String type) {
         this.type = type;
     }
+
 }
